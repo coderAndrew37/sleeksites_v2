@@ -1,21 +1,59 @@
-import type { Image, PortableTextBlock } from "sanity";
+// components/types/blog.ts
+import type { Image } from "sanity";
 
 export interface CustomImage extends Image {
-  alt: string; // Required for tech agency accessibility
+  alt: string;
   caption?: string;
-  source?: string; // Image credit/link
+  source?: string;
+  assetUrl?: string;
 }
 
 export interface Author {
   name: string;
   image: CustomImage | string | null;
-  bio: string;
   role: string;
+  bio?: string | any[];
 }
 
-export interface Category {
+export interface QuizOption {
+  text: string;
+  correct: boolean;
+}
+
+export interface QuizQuestion {
+  question: string;
+  options: QuizOption[];
+}
+
+export interface Quiz {
+  _type: "quiz";
   title: string;
-  slug: string;
+  description?: string;
+  questions: QuizQuestion[];
+}
+
+export interface RelatedPostCard {
+  _type: "relatedPost";
+  heading: string;
+  article: {
+    title: string;
+    slug: { current: string };
+    mainImage: CustomImage;
+  };
+}
+
+export interface PortableTextBlock {
+  _key: string;
+  _type: string;
+  children: Array<{
+    _key: string;
+    _type: string;
+    text: string;
+    marks?: string[];
+  }>;
+  style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
+  list?: "bullet" | "number";
+  level?: number;
 }
 
 export interface BlogPost {
@@ -23,7 +61,8 @@ export interface BlogPost {
   title: string;
   slug: string;
   excerpt: string;
-  body: PortableTextBlock[]; // Replaced any[]
+  // Updated body to include Quiz type
+  body: (PortableTextBlock | RelatedPostCard | Quiz)[];
   mainImage: CustomImage | string | null;
   author: Author;
   publishedAt: string;

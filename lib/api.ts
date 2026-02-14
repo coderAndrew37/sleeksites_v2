@@ -1,56 +1,77 @@
+import { BlogPost } from "@/app/components/types/blog";
 import "server-only";
 import { client } from "./sanity/client";
-import { urlForServer } from "./sanity/image";
-import { BlogPost } from "@/app/components/types/blog";
+import { groq } from "next-sanity";
 
-// Internal interface for the raw GROQ result
-interface RawPost extends Omit<BlogPost, "mainImage" | "author"> {
-  mainImage: any; // Temporarily 'any' here is okay as it's private to this file's internal mapping
-  author: {
-    name: string;
-    role: string;
-    bio: string;
-    image: any;
-  };
-}
-
-export async function getPosts(limit: number = 3): Promise<BlogPost[]> {
-  const query = `*[_type == "post"] | order(publishedAt desc)[0...${limit}] {
-    _id,
-    title,
-    "slug": slug.current,
-    excerpt,
-    body,
-    mainImage,
-    author-> {
-      name,
-      role,
-      bio,
-      image
+export const postFields = groq`
+  _id,
+  title,
+  "slug": slug.current,
+  excerpt,
+  body[]{
+    ...,
+    _type == "image" => {
+      ...,
+      "assetUrl": asset->url
     },
-    publishedAt,
-    readTime,
-    "category": category->title, 
-    "featured": isFeatured,
-    seo
+    _type == "relatedPost" => {
+      ...,
+      article->{
+        title,
+        "slug": slug.current,
+        "mainImage": mainImage.asset->url
+      }
+    },
+    _type == "quiz" => {
+      ...
+    }
+  },
+  "mainImage": mainImage.asset->url,
+  "publishedAt": _createdAt,
+  "author": author->{
+    name,
+    role,
+    "image": image.asset->url,
+    bio
+  },
+  "category": categories[0]->title,
+  readTime,
+  "featured": isFeatured,
+  seo {
+    metaTitle,
+    metaDescription,
+    keywords,
+    "ogImage": ogImage.asset->url
+  }
+`;
+
+// Optimized getPosts using fragments
+export async function getPosts(limit: number = 3): Promise<BlogPost[]> {
+  const query = groq`*[_type == "post"] | order(publishedAt desc)[0...${limit}] {
+    ${postFields}
   }`;
 
   try {
-    const rawData = await client.fetch<RawPost[]>(query);
-
-    // Transform: Turn Sanity objects into ready-to-use strings/types for the client
-    return rawData.map(
-      (post): BlogPost => ({
-        ...post,
-        mainImage: post.mainImage ? urlForServer(post.mainImage) : null,
-        author: {
-          ...post.author,
-          image: post.author.image ? urlForServer(post.author.image) : null,
-        },
-      }),
-    );
+    return await client.fetch<BlogPost[]>(query);
   } catch (error) {
     console.error("Critical Fetch Error:", error);
     return [];
   }
+}
+
+export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
+  return await client.fetch(
+    groq`*[_type == "post" && slug.current == $slug][0]{${postFields}}`,
+    { slug },
+  );
+}
+
+export async function getRelatedPosts(
+  category: string,
+  currentId: string,
+): Promise<BlogPost[]> {
+  return await client.fetch(
+    groq`*[_type == "post" && categories[0]->title == $category && _id != $currentId][0...3]{${postFields}}`,
+    { category, currentId },
+  );
 }

@@ -1,4 +1,6 @@
 // components/blog/QuizComponent.tsx
+"use client";
+
 import { JSX, useState } from "react";
 import { Quiz, QuizQuestion } from "../types/blog";
 
@@ -28,16 +30,12 @@ export function QuizComponent({
     if (currentQuestion < quiz.questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // Calculate score
-      const correctAnswers = quiz.questions.reduce((acc, question, index) => {
+      const correctAnswers = quiz.questions.reduce((acc, q, index) => {
         const selectedOptionIndex = selectedAnswers[index];
-        if (
-          selectedOptionIndex !== undefined &&
-          question.options[selectedOptionIndex].correct
-        ) {
-          return acc + 1;
-        }
-        return acc;
+        return selectedOptionIndex !== undefined &&
+          q.options[selectedOptionIndex].correct
+          ? acc + 1
+          : acc;
       }, 0);
 
       setScore(correctAnswers);
@@ -54,99 +52,113 @@ export function QuizComponent({
 
   if (showResults) {
     return (
-      <div className="bg-white rounded-2xl p-8 shadow-lg">
-        <div className="text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">
-            Quiz Results
-          </h3>
-          <div className="text-4xl font-bold text-blue-700 mb-4">
-            {score} / {quiz.questions.length}
-          </div>
-          <p className="text-gray-600 mb-6">
-            {score === quiz.questions.length
-              ? "Perfect score! Excellent work!"
-              : score >= quiz.questions.length * 0.7
-              ? "Great job! You have a good understanding."
-              : "Keep learning! Review the material and try again."}
-          </p>
-          <button
-            onClick={() => {
-              setCurrentQuestion(0);
-              setSelectedAnswers([]);
-              setShowResults(false);
-              setScore(0);
-            }}
-            className="bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-800 transition-colors"
-          >
-            Retry Quiz
-          </button>
+      <div className="bg-slate-900 rounded-[2.5rem] p-12 text-white text-center shadow-2xl animate-in fade-in zoom-in duration-500">
+        <span className="text-blue-400 text-xs font-bold uppercase tracking-[0.2em]">
+          Results
+        </span>
+        <h3 className="text-4xl font-bold tracking-tight mt-4 mb-2">
+          Quiz Complete
+        </h3>
+        <div className="text-6xl font-black text-white my-8">
+          {score}
+          <span className="text-slate-500">/</span>
+          {quiz.questions.length}
         </div>
+        <p className="text-slate-400 text-lg font-light mb-10 max-w-sm mx-auto">
+          {score === quiz.questions.length
+            ? "Perfect! You've mastered the concepts in this article."
+            : score >= quiz.questions.length * 0.7
+              ? "Great job! You have a solid grasp of the material."
+              : "Interesting insights. A quick re-read might fill in the gaps!"}
+        </p>
+        <button
+          onClick={() => {
+            setCurrentQuestion(0);
+            setSelectedAnswers([]);
+            setShowResults(false);
+            setScore(0);
+          }}
+          className="bg-white text-slate-900 px-10 py-4 rounded-2xl font-bold hover:bg-blue-500 hover:text-white transition-all duration-300 shadow-lg"
+        >
+          Try Again
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl p-8 shadow-lg">
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold text-gray-900">{quiz.title}</h3>
-          <span className="text-gray-500 text-sm">
-            {currentQuestion + 1} of {quiz.questions.length}
+    <div className="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-8 md:p-12 my-12 transition-all">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+        <div className="space-y-1">
+          <span className="text-blue-600 text-[10px] font-bold uppercase tracking-widest">
+            Knowledge Check
           </span>
+          <h3 className="text-2xl font-bold text-slate-900 tracking-tight">
+            {quiz.title}
+          </h3>
         </div>
-        {quiz.description && (
-          <p className="text-gray-600">{quiz.description}</p>
-        )}
+        <div className="px-4 py-2 bg-white border border-slate-200 rounded-full text-xs font-bold text-slate-500 tracking-tighter">
+          {currentQuestion + 1} of {quiz.questions.length}
+        </div>
       </div>
 
-      <div className="mb-8">
-        <h4 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="mb-10">
+        <h4 className="text-xl md:text-2xl font-medium text-slate-800 leading-tight mb-8">
           {question.question}
         </h4>
-        <div className="space-y-3">
-          {question.options.map((option, index) => (
-            <button
-              key={index}
-              onClick={() => handleAnswerSelect(index)}
-              className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
-                selectedAnswers[currentQuestion] === index
-                  ? "border-blue-700 bg-blue-50"
-                  : "border-gray-200 hover:border-gray-300"
-              }`}
-            >
-              <div className="flex items-center">
-                <div
-                  className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mr-3 ${
-                    selectedAnswers[currentQuestion] === index
-                      ? "border-blue-700 bg-blue-700"
-                      : "border-gray-300"
-                  }`}
-                >
-                  {selectedAnswers[currentQuestion] === index && (
-                    <div className="w-2 h-2 bg-white rounded-full"></div>
-                  )}
+        <div className="grid grid-cols-1 gap-3">
+          {question.options.map((option, index) => {
+            const isSelected = selectedAnswers[currentQuestion] === index;
+            return (
+              <button
+                key={index}
+                onClick={() => handleAnswerSelect(index)}
+                className={`group w-full text-left p-6 rounded-2xl border-2 transition-all duration-300 ${
+                  isSelected
+                    ? "border-blue-600 bg-white shadow-md ring-4 ring-blue-600/5"
+                    : "border-transparent bg-white/50 hover:bg-white hover:border-slate-300"
+                }`}
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                      isSelected
+                        ? "border-blue-600 bg-blue-600"
+                        : "border-slate-300 group-hover:border-slate-400"
+                    }`}
+                  >
+                    {isSelected && (
+                      <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                    )}
+                  </div>
+                  <span
+                    className={`text-[17px] transition-colors ${isSelected ? "text-slate-900 font-bold" : "text-slate-600"}`}
+                  >
+                    {option.text}
+                  </span>
                 </div>
-                <span className="text-gray-700">{option.text}</span>
-              </div>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex items-center justify-between border-t border-slate-200 pt-8">
         <button
           onClick={handlePrevious}
           disabled={currentQuestion === 0}
-          className="px-6 py-3 rounded-xl font-semibold border border-gray-300 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+          className="text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 disabled:opacity-0 transition-all"
         >
-          Previous
+          Back
         </button>
         <button
           onClick={handleNext}
           disabled={selectedAnswers[currentQuestion] === undefined}
-          className="bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-600 transition-all disabled:opacity-50 disabled:grayscale"
         >
-          {currentQuestion === quiz.questions.length - 1 ? "Finish" : "Next"}
+          {currentQuestion === quiz.questions.length - 1
+            ? "See Results"
+            : "Next Question"}
         </button>
       </div>
     </div>

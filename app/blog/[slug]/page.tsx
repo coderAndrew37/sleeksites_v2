@@ -1,113 +1,90 @@
-// app/blog/[slug]/page.tsx (fully optimized)
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { BlogHeader } from "@/app/components/blog/BlogHeader";
+import { AuthorBio } from "@/app/components/blog/AuthorBio";
+import { RelatedPosts } from "@/app/components/blog/RelatedPosts";
+import CustomPortableText from "@/app/components/blog/PortableTextComponents";
+import { getPostBySlug, getRelatedPosts } from "@/lib/api";
+import { getHeadings } from "@/lib/blog/heading-parser";
+import { BlogClientShell } from "./BlogClient";
 
-import BlogPostPageWrapper from "./ClientPage";
-import { client, urlForImage } from "@/lib/sanity";
-import { cache } from "react";
-
-// Revalidate every 60 sec
-export const revalidate = 60;
-
-// ----------------------------------------
-// Reusable caching layer
-// ----------------------------------------
-const sanityFetch = cache(async (query: string, params: any = {}) => {
-  return client.fetch(query, params);
-});
-
-// ----------------------------------------
-// Queries
-// ----------------------------------------
-const postQuery = `
-*[_type == "post" && slug.current == $slug][0]{
-  _id,
-  title,
-  slug,
-  excerpt,
-  body,
-  mainImage,
-  publishedAt,
-  readTime,
-  featured,
-  "author": author->{
-    name,
-    role,
-    bio,
-    "image": image.asset->url
-  },
-  "categories": categories[]->{
-    title,
-    slug
-  },
-  seo
-}
-`;
-
-const relatedQuery = `
-*[
-  _type == "post" &&
-  slug.current != $slug &&
-  count(categories[@._ref in ^.^.categories[]._ref]) > 0
-][0...3]{
-  _id,
-  title,
-  slug,
-  excerpt,
-  mainImage,
-  publishedAt,
-  readTime,
-  "author": author->{name, role},
-  "categories": categories[]->{ title, slug }
-}
-`;
-
-// ----------------------------------------
-// Static params
-// ----------------------------------------
-export async function generateStaticParams() {
-  const posts = await sanityFetch(`*[_type == "post"]{ slug }`);
-  return posts.map((p: any) => ({ slug: p.slug.current }));
-}
-
-// ----------------------------------------
-// Metadata
-// ----------------------------------------
-export async function generateMetadata(props: {
+interface Props {
   params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await props.params;
-  const post = await sanityFetch(postQuery, { slug });
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) return {};
 
+  const ogImage = post.seo?.ogImage || post.mainImage;
+
   return {
-    title: post.seo?.metaTitle || post.title,
+    title: post.seo?.metaTitle || `${post.title} | SleekSites`,
     description: post.seo?.metaDescription || post.excerpt,
+    keywords: post.seo?.keywords,
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      images: [
-        post.mainImage
-          ? urlForImage(post.mainImage).width(1200).height(630).url()
-          : "/default-og.jpg",
-      ],
       type: "article",
       publishedTime: post.publishedAt,
-      authors: [post.author.name],
+      images: ogImage ? [{ url: ogImage as string }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: ogImage ? [ogImage as string] : [],
     },
   };
 }
 
-// ----------------------------------------
-// Server page
-// ----------------------------------------
-export default async function Page(props: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await props.params;
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
-  // Fetch on the server (ONE round)
-  const post = await sanityFetch(postQuery, { slug });
-  const related = await sanityFetch(relatedQuery, { slug });
+  if (!post) notFound();
 
-  return <BlogPostPageWrapper post={post} relatedPosts={related} slug={slug} />;
+  // Fetch related content and parse headings in parallel
+  const [relatedPosts, headings] = await Promise.all([
+    getRelatedPosts(post.category || "", post._id),
+    getHeadings(post.body),
+  ]);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    image: post.mainImage,
+    datePublished: post.publishedAt,
+    author: {
+      "@type": "Person",
+      name: post.author.name,
+    },
+    description: post.excerpt,
+  };
+
+  return (
+    <main className="min-h-screen bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      <BlogHeader post={post} />
+
+      <section className="max-w-7xl mx-auto px-6 pb-24">
+        <BlogClientShell headings={headings}>
+          <CustomPortableText value={post.body} />
+
+          <footer className="mt-16 pt-16 border-t border-slate-100">
+            <AuthorBio author={post.author} />
+          </footer>
+        </BlogClientShell>
+      </section>
+
+      <RelatedPosts posts={relatedPosts} />
+    </main>
+  );
 }

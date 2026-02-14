@@ -1,174 +1,138 @@
+// components/blog/CustomPortableText.tsx
+"use client";
+
+import { PortableText, PortableTextComponents } from "@portabletext/react";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Image from "next/image";
 import Link from "next/link";
-import { urlForImage } from "@/lib/sanity";
+import {
+  PortableTextBlock,
+  RelatedPostCard,
+  Quiz,
+} from "@/app/components/types/blog";
+import { QuizComponent } from "./QuizComponent";
 
-export const portableTextComponents = {
+// Helper to generate IDs for TOC
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-");
+
+const components: PortableTextComponents = {
   types: {
-    image: ({ value }: any) => {
-      if (!value?.asset?._ref) {
-        return null;
-      }
-
-      return (
-        <div className="my-8">
-          <div className="relative w-full h-96 rounded-2xl overflow-hidden">
-            <Image
-              src={urlForImage(value).width(1200).height(600).url()}
-              alt={value.alt || "Blog post image"}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-              placeholder="blur"
-              blurDataURL={urlForImage(value)
-                .width(20)
-                .height(20)
-                .blur(10)
-                .url()}
-            />
-          </div>
-          {value.caption && (
-            <p className="text-center text-gray-600 text-sm mt-2">
-              {value.caption}
-            </p>
-          )}
+    image: ({ value }) => (
+      <figure className="my-12 space-y-4">
+        <div className="relative w-full aspect-video rounded-[2rem] overflow-hidden bg-slate-100 border border-slate-200">
+          <Image
+            src={value.assetUrl || "/placeholder.jpg"}
+            alt={value.alt || "SleekSites Insight"}
+            fill
+            className="object-cover"
+          />
         </div>
-      );
-    },
-    code: ({ value }: any) => {
-      if (!value?.code) {
-        return null;
-      }
-
+        {value.caption && (
+          <figcaption className="text-center text-sm text-slate-500 font-light italic">
+            — {value.caption}
+          </figcaption>
+        )}
+      </figure>
+    ),
+    quiz: ({ value }) => (
+      <div className="my-16">
+        <QuizComponent
+          quiz={value}
+          onComplete={() => console.log("Quiz finished!")}
+        />
+      </div>
+    ),
+    code: ({ value }) => (
+      <div className="my-10 rounded-2xl overflow-hidden shadow-2xl border border-slate-800">
+        <SyntaxHighlighter
+          language={value.language || "typescript"}
+          style={oneDark}
+          customStyle={{ margin: 0, padding: "1.5rem", fontSize: "14px" }}
+        >
+          {value.code}
+        </SyntaxHighlighter>
+      </div>
+    ),
+    relatedPost: ({ value }: { value: RelatedPostCard }) => {
+      const post = value.article;
+      if (!post) return null;
       return (
-        <div className="my-6">
-          {value.filename && (
-            <div className="bg-gray-800 text-gray-200 px-4 py-2 rounded-t-lg text-sm font-mono border-b border-gray-700">
-              {value.filename}
+        <Link href={`/blog/${post.slug.current}`} className="block my-12 group">
+          <div className="bg-slate-50 border border-slate-200 rounded-3xl p-6 flex flex-col md:flex-row gap-6 items-center transition-all hover:bg-white hover:shadow-xl hover:border-blue-200">
+            <div className="w-full md:w-1/3 aspect-video relative rounded-2xl overflow-hidden">
+              <Image
+                src={
+                  typeof post.mainImage === "string"
+                    ? post.mainImage
+                    : "/placeholder.jpg"
+                }
+                alt={post.title}
+                fill
+                className="object-cover"
+              />
             </div>
-          )}
-          <pre
-            className={`bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto ${
-              value.filename ? "rounded-t-none" : ""
-            }`}
-          >
-            <code className={`language-${value.language} block`}>
-              {value.code}
-            </code>
-          </pre>
-        </div>
-      );
-    },
-    quiz: ({ value }: any) => {
-      // This will be handled by the QuizComponent in the blog page
-      return null;
-    },
-  },
-  block: {
-    h1: ({ children }: any) => (
-      <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mt-12 mb-6 leading-tight">
-        {children}
-      </h1>
-    ),
-    h2: ({ children, value }: any) => (
-      <h2
-        id={value?._key}
-        className="text-3xl md:text-4xl font-bold text-gray-900 mt-12 mb-6 scroll-mt-24"
-      >
-        {children}
-      </h2>
-    ),
-    h3: ({ children, value }: any) => (
-      <h3
-        id={value?._key}
-        className="text-2xl md:text-3xl font-bold text-gray-900 mt-10 mb-4 scroll-mt-24"
-      >
-        {children}
-      </h3>
-    ),
-    h4: ({ children }: any) => (
-      <h4 className="text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-3">
-        {children}
-      </h4>
-    ),
-    normal: ({ children }: any) => (
-      <p className="text-lg text-gray-700 leading-relaxed mb-6">{children}</p>
-    ),
-    blockquote: ({ children }: any) => (
-      <blockquote className="border-l-4 border-blue-600 pl-6 py-2 my-6 bg-blue-50 rounded-r-xl">
-        <p className="text-xl text-gray-700 italic">{children}</p>
-      </blockquote>
-    ),
-  },
-  marks: {
-    link: ({ children, value }: any) => {
-      const { href, blank } = value;
-      return (
-        <a
-          href={href}
-          target={blank ? "_blank" : "_self"}
-          rel={blank ? "noopener noreferrer" : ""}
-          className="text-blue-600 hover:text-blue-800 underline transition-colors"
-        >
-          {children}
-        </a>
-      );
-    },
-    internalLink: ({ children, value }: any) => {
-      const reference = value?.reference;
-      if (!reference) return children;
-
-      let href = "";
-      let as = "";
-
-      if (reference._type === "post") {
-        href = "/blog/[slug]";
-        as = `/blog/${reference.slug?.current}`;
-      } else if (reference._type === "page") {
-        href = `/${reference.slug?.current}`;
-      }
-
-      if (!href) return children;
-
-      return (
-        <Link
-          href={href}
-          as={as}
-          className="text-blue-600 hover:text-blue-800 underline transition-colors"
-        >
-          {children}
+            <div className="flex-1 space-y-2">
+              <span className="text-blue-600 text-[10px] font-bold uppercase tracking-widest">
+                {value.heading}
+              </span>
+              <h4 className="text-xl font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+                {post.title}
+              </h4>
+            </div>
+          </div>
         </Link>
       );
     },
-    strong: ({ children }: any) => (
-      <strong className="font-semibold text-gray-900">{children}</strong>
-    ),
-    em: ({ children }: any) => (
-      <em className="italic text-gray-700">{children}</em>
-    ),
-    code: ({ children }: any) => (
-      <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">
-        {children}
-      </code>
-    ),
   },
-  list: {
-    bullet: ({ children }: any) => (
-      <ul className="list-disc list-inside space-y-3 mb-6 text-gray-700">
+  block: {
+    h2: ({ children }) => {
+      const id = slugify(children?.toString() || "");
+      return (
+        <h2
+          id={id}
+          className="text-3xl md:text-4xl font-bold mt-16 mb-6 tracking-tight text-slate-900 scroll-mt-32"
+        >
+          {children}
+        </h2>
+      );
+    },
+    h3: ({ children }) => {
+      const id = slugify(children?.toString() || "");
+      return (
+        <h3
+          id={id}
+          className="text-2xl font-bold mt-10 mb-4 tracking-tight text-slate-800 scroll-mt-32"
+        >
+          {children}
+        </h3>
+      );
+    },
+    normal: ({ children }) => (
+      <p className="text-lg md:text-xl leading-relaxed text-slate-600 mb-8 font-light">
         {children}
-      </ul>
+      </p>
     ),
-    number: ({ children }: any) => (
-      <ol className="list-decimal list-inside space-y-3 mb-6 text-gray-700">
+    blockquote: ({ children }) => (
+      <blockquote className="border-l-2 border-blue-600 pl-8 my-12 italic text-2xl text-slate-700 font-light leading-snug">
         {children}
-      </ol>
-    ),
-  },
-  listItem: {
-    bullet: ({ children }: any) => (
-      <li className="text-lg text-gray-700 leading-relaxed pl-2">{children}</li>
-    ),
-    number: ({ children }: any) => (
-      <li className="text-lg text-gray-700 leading-relaxed pl-2">{children}</li>
+      </blockquote>
     ),
   },
 };
+
+export default function CustomPortableText({
+  value,
+}: {
+  value: (PortableTextBlock | RelatedPostCard | Quiz)[];
+}) {
+  return (
+    <div className="max-w-3xl mx-auto">
+      <PortableText value={value} components={components} />
+    </div>
+  );
+}
