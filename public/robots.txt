@@ -1,0 +1,16 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /_next/static/chunks/
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Host
+Host: https://sleeksites.co.ke
+
+# Sitemaps
+Sitemap: https://sleeksites.co.ke/sitemap.xml
+Sitemap: https://sleeksites.co.ke/server-sitemap.xml

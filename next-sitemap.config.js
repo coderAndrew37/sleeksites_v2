@@ -1,25 +1,24 @@
-// next-sitemap.config.ts
-import type { IConfig, ISitemapField } from "next-sitemap";
-
-const config: IConfig = {
+/** @type {import('next-sitemap').IConfig} */
+const config = {
   siteUrl: process.env.SITE_URL || "https://sleeksites.co.ke",
   generateRobotsTxt: true,
   generateIndexSitemap: true,
   sitemapSize: 7000,
   exclude: ["/server-sitemap.xml"],
-  
+
   robotsTxtOptions: {
-    additionalSitemaps: [
-      "https://sleeksites.co.ke/server-sitemap.xml",
-    ],
+    additionalSitemaps: ["https://sleeksites.co.ke/server-sitemap.xml"],
     policies: [
       { userAgent: "*", allow: "/" },
-      { userAgent: "*", disallow: ["/_next/static/chunks/", "/*.js$", "/*.css$"] },
+      {
+        userAgent: "*",
+        disallow: ["/_next/static/chunks/", "/*.js$", "/*.css$"],
+      },
     ],
   },
 
-  // Fully typed transform function
-  transform: async (config: IConfig, path: string): Promise<ISitemapField> => {
+  // The transform function in JS
+  transform: async (config, path) => {
     return {
       loc: path,
       changefreq: config.changefreq,
@@ -27,7 +26,9 @@ const config: IConfig = {
       lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
       images: [
         {
-          loc: "https://sleeksites.co.ke/og-image.jpg",
+          // We keep the new URL() wrapper to ensure the sitemap generator
+          // receives the object format it expects
+          loc: new URL("https://sleeksites.co.ke/og-image.jpg"),
           title: "SleekSites | Premium Web Development",
           caption: "We build high-performance digital engines.",
         },
@@ -36,4 +37,4 @@ const config: IConfig = {
   },
 };
 
-export default config;
+module.exports = config;

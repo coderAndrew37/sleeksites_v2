@@ -2,6 +2,15 @@
 import { JSX } from "react";
 import Button from "../components/ui/Button";
 import Layout from "../components/layout/Layout";
+import { motion } from "framer-motion";
+import {
+  Users,
+  Target,
+  Lightbulb,
+  Zap,
+  Rocket,
+  ShieldCheck,
+} from "lucide-react";
 
 interface TeamMember {
   id: string;
@@ -12,279 +21,294 @@ interface TeamMember {
   skills: string[];
 }
 
+const teamMembers: TeamMember[] = [
+  {
+    id: "1",
+    name: "John Kamau",
+    role: "Founder & Lead Developer",
+    bio: "With over 8 years of experience, John bridges the gap between complex engineering and business strategy.",
+    image: "/team/john.jpg",
+    skills: ["Web Development", "Digital Strategy", "Team Leadership"],
+  },
+  {
+    id: "2",
+    name: "Sarah Wanjiku",
+    role: "Senior Web Designer",
+    bio: "Sarah specializes in high-conversion UI/UX. She ensures every pixel serves a business purpose.",
+    image: "/team/sarah.jpg",
+    skills: ["UI/UX Design", "Brand Identity", "Optimization"],
+  },
+  {
+    id: "3",
+    name: "David Ochieng",
+    role: "SEO Specialist",
+    bio: "David turns search intent into revenue, helping local brands dominate the Kenyan search landscape.",
+    image: "/team/david.jpg",
+    skills: ["SEO Strategy", "Content Marketing", "Analytics"],
+  },
+  {
+    id: "4",
+    name: "Grace Mwende",
+    role: "Digital Marketing Manager",
+    bio: "Grace manages ROI-focused campaigns, turning social media browsers into loyal customers.",
+    image: "/team/grace.jpg",
+    skills: ["PPC Advertising", "Campaign Management", "Copywriting"],
+  },
+];
+
+const values = [
+  {
+    icon: <Target className="w-8 h-8 text-orange-500" />,
+    title: "Results-Driven",
+    description: "We don't just build sites; we build revenue engines.",
+  },
+  {
+    icon: <Lightbulb className="w-8 h-8 text-blue-500" />,
+    title: "Innovation",
+    description:
+      "Modern stacks (Next.js, Tailwind) for lightning-fast performance.",
+  },
+  {
+    icon: <ShieldCheck className="w-8 h-8 text-emerald-500" />,
+    title: "Partnership",
+    description:
+      "Your success is our reputation. We’re in it for the long haul.",
+  },
+  {
+    icon: <Zap className="w-8 h-8 text-purple-500" />,
+    title: "Efficiency",
+    description: "Agile delivery cycles. No bloated timelines, just results.",
+  },
+];
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.6 },
+};
+
 export default function About(): JSX.Element {
-  const teamMembers: TeamMember[] = [
-    {
-      id: "1",
-      name: "John Kamau",
-      role: "Founder & Lead Developer",
-      bio: "With over 8 years of experience in web development and digital marketing, John leads our technical team and ensures every project meets the highest standards.",
-      image: "/team/john.jpg",
-      skills: ["Web Development", "Digital Strategy", "Team Leadership"],
-    },
-    {
-      id: "2",
-      name: "Sarah Wanjiku",
-      role: "Senior Web Designer",
-      bio: "Sarah specializes in creating beautiful, user-friendly designs that convert visitors into customers. Her designs have helped numerous Kenyan businesses succeed online.",
-      image: "/team/sarah.jpg",
-      skills: ["UI/UX Design", "Brand Identity", "Conversion Optimization"],
-    },
-    {
-      id: "3",
-      name: "David Ochieng",
-      role: "SEO Specialist",
-      bio: "David is our SEO expert with a proven track record of helping Kenyan businesses rank on the first page of Google and attract qualified traffic.",
-      image: "/team/david.jpg",
-      skills: ["SEO Strategy", "Content Marketing", "Analytics"],
-    },
-    {
-      id: "4",
-      name: "Grace Mwende",
-      role: "Digital Marketing Manager",
-      bio: "Grace manages our social media and advertising campaigns, helping businesses reach their target audience and maximize ROI.",
-      image: "/team/grace.jpg",
-      skills: [
-        "Social Media Marketing",
-        "PPC Advertising",
-        "Campaign Management",
-      ],
-    },
-  ];
-
-  const values = [
-    {
-      icon: "🎯",
-      title: "Results-Driven",
-      description:
-        "We focus on delivering measurable results that help your business grow and succeed.",
-    },
-    {
-      icon: "💡",
-      title: "Innovation",
-      description:
-        "We stay ahead of trends and use the latest technologies to create cutting-edge solutions.",
-    },
-    {
-      icon: "🤝",
-      title: "Partnership",
-      description:
-        "We work closely with our clients as partners, ensuring their success is our success.",
-    },
-    {
-      icon: "⚡",
-      title: "Efficiency",
-      description:
-        "We deliver high-quality work on time and within budget, maximizing your investment.",
-    },
-  ];
-
   return (
     <Layout
-      title="About Us - SleekSites Kenya | Web Design & Digital Marketing Agency"
-      description="Learn about SleekSites Kenya - a leading web design and digital marketing agency helping Kenyan businesses succeed online since 2018."
+      title="About Us - SleekSites Kenya"
+      description="Empowering Kenyan businesses with world-class digital tools."
     >
       {/* Hero Section */}
-      <section className="pt-32 pb-20 bg-gradient-to-br from-blue-900 to-blue-700 text-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                About <span className="text-orange-400">SleekSites</span>
-              </h1>
-              <p className="text-xl md:text-2xl mb-8 leading-relaxed">
-                We're a Kenyan web design and digital marketing agency
-                passionate about helping local businesses thrive online.
-              </p>
+      <section className="relative pt-40 pb-32 bg-slate-900 overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500 rounded-full filter blur-[120px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500 rounded-full filter blur-[120px]" />
+        </div>
+
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div {...fadeInUp} className="max-w-4xl mx-auto text-center">
+            <h1 className="text-5xl md:text-7xl font-black text-white mb-8 tracking-tight">
+              Scaling Kenyan Brands <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                Through Digital Mastery.
+              </span>
+            </h1>
+            <p className="text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto">
+              SleekSites is a boutique digital agency based in Nairobi,
+              dedicated to building high-performance websites that outclass the
+              competition.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
               <Button
                 variant="primary"
-                size="lg"
+                size="xl"
                 onClick={() =>
                   document
                     .getElementById("our-story")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
               >
-                Our Story
+                The SleekSites Way
               </Button>
             </div>
-            <div className="relative">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                <div className="grid grid-cols-2 gap-6">
-                  {[
-                    { number: "127+", label: "Happy Clients" },
-                    { number: "5+", label: "Years Experience" },
-                    { number: "94%", label: "Client Retention" },
-                    { number: "2.3x", label: "Avg. ROI" },
-                  ].map((stat, index) => (
-                    <div key={index} className="text-center">
-                      <div className="text-3xl font-bold text-orange-400 mb-1">
-                        {stat.number}
-                      </div>
-                      <div className="text-white/80 text-sm">{stat.label}</div>
-                    </div>
-                  ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Ribbon */}
+      <section className="py-12 bg-white border-y border-slate-100">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { number: "127+", label: "Brands Launched" },
+              { number: "5+", label: "Years in Nairobi" },
+              { number: "94%", label: "Client Loyalty" },
+              { number: "2.3x", label: "Average ROI Growth" },
+            ].map((stat, i) => (
+              <div key={i} className="text-center">
+                <div className="text-3xl font-bold text-slate-900 mb-1">
+                  {stat.number}
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Our Story */}
-      <section id="our-story" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Our <span className="text-blue-700">Story</span>
-              </h2>
-              <div className="space-y-6 text-gray-600">
-                <p className="text-lg leading-relaxed">
-                  Founded in 2018, SleekSites began with a simple mission: to
-                  help Kenyan businesses establish a strong online presence and
-                  compete effectively in the digital age.
-                </p>
-                <p className="leading-relaxed">
-                  We noticed that many local businesses struggled with outdated
-                  websites, poor online visibility, and limited digital
-                  marketing knowledge. This inspired us to create solutions that
-                  are not only technically excellent but also tailored to the
-                  unique needs of the Kenyan market.
-                </p>
-                <p className="leading-relaxed">
-                  Today, we've grown into a full-service digital agency, but our
-                  core mission remains the same: to empower Kenyan businesses
-                  with the digital tools and strategies they need to succeed.
-                </p>
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl p-8">
-              <div className="bg-white rounded-xl p-6 shadow-lg">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Our Mission
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  To empower Kenyan businesses with cutting-edge digital
-                  solutions that drive growth, increase visibility, and maximize
-                  ROI.
-                </p>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Our Vision
-                </h3>
-                <p className="text-gray-600">
-                  To be the leading digital partner for Kenyan businesses,
-                  recognized for excellence, innovation, and measurable results.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Values */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Our <span className="text-blue-700">Values</span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              The principles that guide everything we do and define who we are
-              as a company
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-xl transition-shadow"
-              >
-                <div className="text-4xl mb-4">{value.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  {value.title}
-                </h3>
-                <p className="text-gray-600">{value.description}</p>
+                <div className="text-slate-500 text-sm font-medium uppercase tracking-wider">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Team */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Meet Our <span className="text-blue-700">Team</span>
+      {/* Our Story */}
+      <section id="our-story" className="py-24 bg-slate-50">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <motion.div {...fadeInUp}>
+              <h2 className="text-4xl font-bold text-slate-900 mb-6">
+                Born from a need for{" "}
+                <span className="text-blue-600">better.</span>
+              </h2>
+              <div className="space-y-6 text-slate-600 text-lg">
+                <p>
+                  Founded in 2018, we noticed a gap: Kenyan businesses had to
+                  choose between cheap, broken websites or overpriced, detached
+                  agencies.
+                </p>
+                <p>
+                  We created <strong>SleekSites</strong> to provide a third
+                  option—premium, world-class engineering with a deep
+                  understanding of the local market landscape.
+                </p>
+              </div>
+
+              <div className="mt-10 p-8 bg-blue-600 rounded-3xl text-white shadow-xl shadow-blue-200">
+                <Rocket className="w-12 h-12 mb-4 text-blue-200" />
+                <h3 className="text-2xl font-bold mb-2 text-white">
+                  Our Mission
+                </h3>
+                <p className="text-blue-100 italic">
+                  "To equip every visionary Kenyan business with the technical
+                  edge required to compete globally while winning locally."
+                </p>
+              </div>
+            </motion.div>
+
+            <div className="relative">
+              <div className="aspect-square bg-white rounded-[3rem] shadow-2xl overflow-hidden border-8 border-white">
+                {/* Replace with an actual office/team photo */}
+                <div className="w-full h-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center p-12 text-center">
+                  <p className="text-slate-400 font-medium italic">
+                    Building the future of the Kenyan web, one project at a
+                    time.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Values Grid */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">
+              The Values We Live By
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              The talented professionals behind SleekSites' success
-            </p>
+            <div className="h-1 w-20 bg-blue-600 mx-auto rounded-full" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {teamMembers.map((member) => (
-              <div
-                key={member.id}
-                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
+            {values.map((value, index) => (
+              <motion.div
+                key={index}
+                {...fadeInUp}
+                transition={{ delay: index * 0.1 }}
+                className="p-10 rounded-3xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-2xl transition-all group"
               >
-                <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 relative">
-                  <div className="absolute bottom-4 left-4">
-                    <span className="bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
-                      {member.role}
-                    </span>
+                <div className="mb-6 transform group-hover:scale-110 transition-transform">
+                  {value.icon}
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">
+                  {value.title}
+                </h3>
+                <p className="text-slate-500 leading-relaxed">
+                  {value.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="py-24 bg-slate-900 text-white">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div>
+              <h2 className="text-4xl font-bold mb-4">The A-Team</h2>
+              <p className="text-slate-400 text-lg">
+                World-class talent, homegrown in Kenya.
+              </p>
+            </div>
+            <Users className="w-16 h-16 text-slate-800" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {teamMembers.map((member, i) => (
+              <motion.div
+                key={member.id}
+                {...fadeInUp}
+                transition={{ delay: i * 0.1 }}
+                className="group relative bg-slate-800/50 rounded-3xl overflow-hidden border border-slate-700/50"
+              >
+                <div className="aspect-[4/5] bg-slate-700 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500">
+                  {/* Image placeholder */}
+                  <div className="w-full h-full flex items-center justify-center text-slate-500 font-bold uppercase tracking-widest text-xs">
+                    {member.name}
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {member.name}
-                  </h3>
-                  <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                    {member.bio}
+                  <p className="text-blue-400 text-xs font-bold uppercase tracking-widest mb-1">
+                    {member.role}
                   </p>
+                  <h3 className="text-xl font-bold mb-4">{member.name}</h3>
                   <div className="flex flex-wrap gap-2">
-                    {member.skills.map((skill, index) => (
+                    {member.skills.slice(0, 2).map((skill, idx) => (
                       <span
-                        key={index}
-                        className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
+                        key={idx}
+                        className="text-[10px] bg-slate-700 px-2 py-1 rounded text-slate-300"
                       >
                         {skill}
                       </span>
                     ))}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-900 to-blue-700 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Ready to Work With Us?
+      {/* CTA */}
+      <section className="py-24 bg-blue-600 relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-20 opacity-10">
+          <Rocket className="w-64 h-64 text-white -rotate-12" />
+        </div>
+        <div className="container mx-auto px-6 text-center relative z-10">
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-8">
+            Let's Make Your Digital Mark.
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Let's discuss how we can help your business achieve its digital
-            goals.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-wrap justify-center gap-6">
             <Button
-              variant="primary"
+              variant="secondary"
               size="xl"
               onClick={() => (window.location.href = "/contact")}
             >
-              Get Started
+              Hire the Agency
             </Button>
             <Button
               variant="outline"
+              className="text-white border-white hover:bg-white hover:text-blue-600"
               size="xl"
               onClick={() => (window.location.href = "/portfolio")}
             >
-              View Our Work
+              See Portfolios
             </Button>
           </div>
         </div>
