@@ -12,12 +12,23 @@ import {
 } from "@/app/components/types/blog";
 import { QuizComponent } from "./QuizComponent";
 
-// Helper to generate IDs for TOC
-const slugify = (text: string) =>
-  text
+// Enhanced Helper to generate IDs for TOC
+// This safely extracts text from the children array/object
+const slugify = (children: any) => {
+  const text = Array.isArray(children)
+    ? children
+        .map((child) =>
+          typeof child === "string" ? child : child?.props?.text || "",
+        )
+        .join("")
+    : children?.toString() || "";
+
+  return text
     .toLowerCase()
+    .trim()
     .replace(/[^\w\s-]/g, "")
     .replace(/\s+/g, "-");
+};
 
 const components: PortableTextComponents = {
   types: {
@@ -49,7 +60,8 @@ const components: PortableTextComponents = {
         )}
       </figure>
     ),
-    quiz: ({ value }) => (
+
+    quiz: ({ value }: { value: Quiz }) => (
       <div className="my-16">
         <QuizComponent
           quiz={value}
@@ -57,14 +69,28 @@ const components: PortableTextComponents = {
         />
       </div>
     ),
+
     code: ({ value }) => (
-      <div className="my-10 rounded-2xl overflow-hidden shadow-2xl border border-slate-800">
+      <div className="my-10 rounded-2xl overflow-hidden shadow-2xl border border-slate-800 bg-[#282c34]">
+        {value.filename && (
+          <div className="px-6 py-3 border-b border-slate-700 text-slate-400 text-xs font-mono flex justify-between items-center">
+            <span>{value.filename}</span>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">
+              {value.language}
+            </span>
+          </div>
+        )}
         <SyntaxHighlighter
           language={value.language || "typescript"}
           style={oneDark}
-          customStyle={{ margin: 0, padding: "1.5rem", fontSize: "14px" }}
+          customStyle={{
+            margin: 0,
+            padding: "1.5rem",
+            fontSize: "14px",
+            background: "transparent",
+          }}
         >
-          {value.code}
+          {value.code || ""}
         </SyntaxHighlighter>
       </div>
     ),
@@ -73,13 +99,11 @@ const components: PortableTextComponents = {
       const post = value.article;
       if (!post) return null;
 
-      // Extract the slug string safely
       const slug =
         typeof post.slug === "string" ? post.slug : post.slug?.current;
 
       return (
         <div className="my-16 group relative">
-          {/* Decorative Background Accent */}
           <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/20 to-transparent rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
           <Link
@@ -87,7 +111,6 @@ const components: PortableTextComponents = {
             className="relative block bg-slate-50 border border-slate-200 rounded-[2rem] p-4 md:p-6 transition-all duration-300 hover:bg-white hover:border-blue-200 hover:shadow-xl overflow-hidden"
           >
             <div className="flex flex-col md:flex-row gap-8 items-center">
-              {/* Image Preview */}
               <div className="w-full md:w-2/5 aspect-[16/10] relative rounded-2xl overflow-hidden shadow-sm">
                 <Image
                   src={
@@ -101,7 +124,6 @@ const components: PortableTextComponents = {
                 />
               </div>
 
-              {/* Content Side */}
               <div className="flex-1 space-y-4">
                 <div className="flex items-center gap-3">
                   <span className="flex h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
@@ -139,29 +161,24 @@ const components: PortableTextComponents = {
       );
     },
   },
+
   block: {
-    h2: ({ children }) => {
-      const id = slugify(children?.toString() || "");
-      return (
-        <h2
-          id={id}
-          className="text-3xl md:text-4xl font-bold mt-16 mb-6 tracking-tight text-slate-900 scroll-mt-32"
-        >
-          {children}
-        </h2>
-      );
-    },
-    h3: ({ children }) => {
-      const id = slugify(children?.toString() || "");
-      return (
-        <h3
-          id={id}
-          className="text-2xl font-bold mt-10 mb-4 tracking-tight text-slate-800 scroll-mt-32"
-        >
-          {children}
-        </h3>
-      );
-    },
+    h2: ({ children }) => (
+      <h2
+        id={slugify(children)}
+        className="text-3xl md:text-4xl font-bold mt-16 mb-6 tracking-tight text-slate-900 scroll-mt-32"
+      >
+        {children}
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3
+        id={slugify(children)}
+        className="text-2xl font-bold mt-10 mb-4 tracking-tight text-slate-800 scroll-mt-32"
+      >
+        {children}
+      </h3>
+    ),
     normal: ({ children }) => (
       <p className="text-lg md:text-xl leading-relaxed text-slate-600 mb-8 font-light">
         {children}
@@ -173,6 +190,19 @@ const components: PortableTextComponents = {
       </blockquote>
     ),
   },
+
+  list: {
+    bullet: ({ children }) => (
+      <ul className="list-disc list-inside space-y-4 mb-8 text-lg md:text-xl text-slate-600 font-light pl-4">
+        {children}
+      </ul>
+    ),
+    number: ({ children }) => (
+      <ol className="list-decimal list-inside space-y-4 mb-8 text-lg md:text-xl text-slate-600 font-light pl-4">
+        {children}
+      </ol>
+    ),
+  },
 };
 
 export default function CustomPortableText({
@@ -181,7 +211,7 @@ export default function CustomPortableText({
   value: (PortableTextBlock | RelatedPostCard | Quiz)[];
 }) {
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto px-1">
       <PortableText value={value} components={components} />
     </div>
   );
