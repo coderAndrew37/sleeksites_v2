@@ -64,6 +64,8 @@ export interface BlogPost {
   // Updated body to include Quiz type
   body: (PortableTextBlock | RelatedPostCard | Quiz)[];
   mainImage: CustomImage | string | null;
+  mainImageCaption?: string;
+  mainImageSource?: string;
   author: Author;
   publishedAt: string;
   readTime: number;

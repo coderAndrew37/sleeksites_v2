@@ -1,4 +1,3 @@
-// components/blog/CustomPortableText.tsx
 "use client";
 
 import { PortableText, PortableTextComponents } from "@portabletext/react";
@@ -23,18 +22,29 @@ const slugify = (text: string) =>
 const components: PortableTextComponents = {
   types: {
     image: ({ value }) => (
-      <figure className="my-12 space-y-4">
-        <div className="relative w-full aspect-video rounded-[2rem] overflow-hidden bg-slate-100 border border-slate-200">
+      <figure className="my-12 group">
+        <div className="relative w-full aspect-video rounded-[2rem] overflow-hidden bg-slate-100 border border-slate-200 transition-shadow duration-500 group-hover:shadow-2xl group-hover:shadow-blue-500/5">
           <Image
             src={value.assetUrl || "/placeholder.jpg"}
             alt={value.alt || "SleekSites Insight"}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
-        {value.caption && (
-          <figcaption className="text-center text-sm text-slate-500 font-light italic">
-            — {value.caption}
+
+        {/* Metadata Row */}
+        {(value.caption || value.source) && (
+          <figcaption className="mt-4 px-4 flex flex-col md:flex-row md:justify-between items-baseline gap-2">
+            {value.caption && (
+              <span className="text-sm text-slate-500 font-light italic">
+                — {value.caption}
+              </span>
+            )}
+            {value.source && (
+              <span className="text-[10px] uppercase tracking-[0.2em] text-slate-300 font-bold group-hover:text-blue-400 transition-colors">
+                Source: {value.source}
+              </span>
+            )}
           </figcaption>
         )}
       </figure>
