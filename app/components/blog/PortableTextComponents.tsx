@@ -68,34 +68,74 @@ const components: PortableTextComponents = {
         </SyntaxHighlighter>
       </div>
     ),
+
     relatedPost: ({ value }: { value: RelatedPostCard }) => {
       const post = value.article;
       if (!post) return null;
+
+      // Extract the slug string safely
+      const slug =
+        typeof post.slug === "string" ? post.slug : post.slug?.current;
+
       return (
-        <Link href={`/blog/${post.slug.current}`} className="block my-12 group">
-          <div className="bg-slate-50 border border-slate-200 rounded-3xl p-6 flex flex-col md:flex-row gap-6 items-center transition-all hover:bg-white hover:shadow-xl hover:border-blue-200">
-            <div className="w-full md:w-1/3 aspect-video relative rounded-2xl overflow-hidden">
-              <Image
-                src={
-                  typeof post.mainImage === "string"
-                    ? post.mainImage
-                    : "/placeholder.jpg"
-                }
-                alt={post.title}
-                fill
-                className="object-cover"
-              />
+        <div className="my-16 group relative">
+          {/* Decorative Background Accent */}
+          <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/20 to-transparent rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+          <Link
+            href={`/blog/${slug}`}
+            className="relative block bg-slate-50 border border-slate-200 rounded-[2rem] p-4 md:p-6 transition-all duration-300 hover:bg-white hover:border-blue-200 hover:shadow-xl overflow-hidden"
+          >
+            <div className="flex flex-col md:flex-row gap-8 items-center">
+              {/* Image Preview */}
+              <div className="w-full md:w-2/5 aspect-[16/10] relative rounded-2xl overflow-hidden shadow-sm">
+                <Image
+                  src={
+                    typeof post.mainImage === "string"
+                      ? post.mainImage
+                      : "/placeholder.jpg"
+                  }
+                  alt={post.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+              </div>
+
+              {/* Content Side */}
+              <div className="flex-1 space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+                  <span className="text-blue-600 text-[10px] font-black uppercase tracking-[0.2em]">
+                    {value.heading || "Further Reading"}
+                  </span>
+                </div>
+
+                <h4 className="text-2xl font-bold text-slate-900 leading-tight group-hover:text-blue-700 transition-colors">
+                  {post.title}
+                </h4>
+
+                <div className="flex items-center text-blue-600 text-sm font-bold gap-2 pt-2 group-hover:translate-x-2 transition-transform">
+                  Read Article
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 12L10 8L6 4"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
-            <div className="flex-1 space-y-2">
-              <span className="text-blue-600 text-[10px] font-bold uppercase tracking-widest">
-                {value.heading}
-              </span>
-              <h4 className="text-xl font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
-                {post.title}
-              </h4>
-            </div>
-          </div>
-        </Link>
+          </Link>
+        </div>
       );
     },
   },

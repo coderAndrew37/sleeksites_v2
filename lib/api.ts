@@ -19,15 +19,17 @@ export const postFields = groq`
     _type == "image" => {
       ...,
       "assetUrl": asset->url,
-      caption, // New: Image caption from Sanity
-      source   // New: Image credit/source from Sanity
+      caption, 
+      source   
     },
     _type == "relatedPost" => {
       ...,
       article->{
         title,
         "slug": slug.current,
-        "mainImage": mainImage.asset->url
+        "mainImage": mainImage.asset->url,
+        "mainImageCaption": mainImage.caption,
+        "mainImageSource": mainImage.source
       }
     },
     _type == "quiz" => {
@@ -35,8 +37,8 @@ export const postFields = groq`
     }
   },
   "mainImage": mainImage.asset->url,
-  "mainImageCaption": mainImage.caption, // New: Hero image caption
-  "mainImageSource": mainImage.source,   // New: Hero image source
+  "mainImageCaption": mainImage.caption,
+  "mainImageSource": mainImage.source,
   "publishedAt": _createdAt,
   "author": author->{
     name,
@@ -117,7 +119,6 @@ export const tagFields = groq`
 export async function getPostsByTag(
   slug: string,
 ): Promise<{ tag: Tag; posts: BlogPost[] } | null> {
-  // We fetch the tag first, then use its _id explicitly for the posts
   const query = groq`*[_type == "tag" && slug.current == $slug][0]{
     ${tagFields},
     "posts": *[_type == "post" && references(^._id)] | order(publishedAt desc) {
@@ -130,7 +131,6 @@ export async function getPostsByTag(
 
     if (!result) return null;
 
-    // Reshape the data to match your expected return type { tag, posts }
     return {
       tag: {
         _id: result._id,
