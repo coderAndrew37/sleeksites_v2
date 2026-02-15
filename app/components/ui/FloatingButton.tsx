@@ -17,6 +17,7 @@ const STEPS = {
   BUDGET: "BUDGET",
   TIMELINE: "TIMELINE",
   FINALIZING: "FINALIZING",
+  SPAM_CHECK: "SPAM_CHECK",
 };
 
 export function FloatingChat() {
@@ -24,6 +25,8 @@ export function FloatingChat() {
   const [step, setStep] = useState(STEPS.START);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [otherText, setOtherText] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   // 1. Persistence Logic: Load from Session Storage on Mount
   useEffect(() => {
@@ -42,7 +45,7 @@ export function FloatingChat() {
 
   // 2. Persistence Logic: Save to Session Storage on Change
   useEffect(() => {
-    if (step !== STEPS.START) {
+    if (step !== STEPS.START && step !== STEPS.SPAM_CHECK) {
       sessionStorage.setItem(
         "sleeksites_chat_progress",
         JSON.stringify({ step, answers, otherText }),
@@ -50,8 +53,15 @@ export function FloatingChat() {
     }
   }, [step, answers, otherText]);
 
+  // 3. Track Start Time for Velocity Check
+  useEffect(() => {
+    if (isOpen && !startTime) {
+      setStartTime(Date.now());
+    }
+  }, [isOpen, startTime]);
+
   const whatsappUrl = useMemo(() => {
-    const phone = "254700000000";
+    const phone = "254746577838"; // Replace with your actual WhatsApp number
     const service =
       answers.service === "Other" ? `Custom: ${otherText}` : answers.service;
     const baseMsg = `*New Inquiry from SleekSites*%0A%0A`;
@@ -60,8 +70,36 @@ export function FloatingChat() {
   }, [answers, otherText]);
 
   const handleAnswer = (key: string, value: string, nextStep: string) => {
+    // Anti-Spam Check 1: Honeypot
+    if (honeypot.length > 0) {
+      setStep(STEPS.SPAM_CHECK);
+      return;
+    }
+
+    // Anti-Spam Check 2: Velocity (Human can't finish in < 4 seconds)
+    if (nextStep === STEPS.FINALIZING && startTime) {
+      const secondsElapsed = (Date.now() - startTime) / 1000;
+      if (secondsElapsed < 4) {
+        setStep(STEPS.SPAM_CHECK);
+        return;
+      }
+    }
+
     setAnswers((prev) => ({ ...prev, [key]: value }));
     setStep(nextStep);
+  };
+
+  const handleFinalSubmit = () => {
+    // Clear everything once they've clicked the redirect
+    sessionStorage.removeItem("sleeksites_chat_progress");
+    setIsOpen(false);
+    // Reset state after transition finishes
+    setTimeout(() => {
+      setStep(STEPS.START);
+      setAnswers({});
+      setOtherText("");
+      setStartTime(null);
+    }, 500);
   };
 
   const handleBack = () => {
@@ -75,7 +113,19 @@ export function FloatingChat() {
 
   return (
     <div className="fixed bottom-8 right-8 z-[100]">
-      <AnimatePresence shadow-2xl>
+      {/* Honeypot Input: Hidden from humans, tempting for bots */}
+      <input
+        aria-label="website_url_verification"
+        type="text"
+        name="website_url_verification"
+        className="absolute opacity-0 pointer-events-none -z-50"
+        tabIndex={-1}
+        autoComplete="off"
+        value={honeypot}
+        onChange={(e) => setHoneypot(e.target.value)}
+      />
+
+      <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{
@@ -91,9 +141,9 @@ export function FloatingChat() {
             {/* Dynamic Header */}
             <div className="bg-slate-900 p-6 text-white flex justify-between items-center">
               <div className="flex items-center gap-3">
-                {step !== STEPS.START && (
+                {step !== STEPS.START && step !== STEPS.SPAM_CHECK && (
                   <button
-                    aria-label="dynamic header"
+                    aria-label="go back"
                     onClick={handleBack}
                     className="p-1 hover:bg-slate-800 rounded-lg transition-colors"
                   >
@@ -105,7 +155,7 @@ export function FloatingChat() {
                     SleekSites
                   </p>
                   <p className="text-slate-400 text-[10px] uppercase tracking-widest font-bold">
-                    Lead Qualifier v2.0
+                    Inquiry Assistant
                   </p>
                 </div>
               </div>
@@ -190,7 +240,9 @@ export function FloatingChat() {
                     />
                     <button
                       disabled={otherText.length < 5}
-                      onClick={() => setStep(STEPS.BUDGET)}
+                      onClick={() =>
+                        handleAnswer("service", "Other", STEPS.BUDGET)
+                      }
                       className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold disabled:opacity-30 transition-all"
                     >
                       Continue
@@ -240,11 +292,7 @@ export function FloatingChat() {
                           <button
                             key={opt}
                             onClick={() => {
-                              setAnswers((prev) => ({
-                                ...prev,
-                                timeline: opt,
-                              }));
-                              setStep(STEPS.FINALIZING);
+                              handleAnswer("timeline", opt, STEPS.FINALIZING);
                             }}
                             className="w-full text-left p-4 rounded-xl border border-slate-100 hover:border-blue-500 hover:bg-blue-50 font-semibold text-slate-700 transition-all"
                           >
@@ -272,10 +320,26 @@ export function FloatingChat() {
                       href={whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={handleFinalSubmit}
                       className="block w-full bg-emerald-500 text-white py-4 rounded-2xl font-bold hover:bg-emerald-600 shadow-xl shadow-emerald-100 transition-all text-center"
                     >
                       Launch WhatsApp
                     </a>
+                  </motion.div>
+                )}
+
+                {step === STEPS.SPAM_CHECK && (
+                  <motion.div key="spam" className="text-center py-4">
+                    <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Send size={24} />
+                    </div>
+                    <p className="font-bold text-xl mb-2 text-slate-900">
+                      Processing Brief
+                    </p>
+                    <p className="text-slate-500 text-sm">
+                      Thank you for your interest. We are validating your data.
+                      You can close this window now.
+                    </p>
                   </motion.div>
                 )}
               </AnimatePresence>
