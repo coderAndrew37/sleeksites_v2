@@ -7,6 +7,7 @@ import CustomPortableText from "@/app/components/blog/PortableTextComponents";
 import { getPostBySlug, getRelatedPosts } from "@/lib/api";
 import { getHeadings } from "@/lib/blog/heading-parser";
 import { BlogClientShell } from "./BlogClient";
+import { TagList } from "@/app/components/blog/TagList";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -77,6 +78,8 @@ export default async function BlogPostPage({ params }: Props) {
       <section className="max-w-7xl mx-auto px-6 pb-24">
         <BlogClientShell headings={headings}>
           <CustomPortableText value={post.body} />
+
+          <TagList tags={post.tags || []} />
 
           <footer className="mt-16 pt-16 border-t border-slate-100">
             <AuthorBio author={post.author} />

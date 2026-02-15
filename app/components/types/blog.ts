@@ -75,4 +75,12 @@ export interface BlogPost {
     keywords?: string[];
     ogImage?: Image;
   };
+  tags?: Tag[];
+}
+
+export interface Tag {
+  _id: string;
+  title: string;
+  slug: string;
+  description?: string;
 }
