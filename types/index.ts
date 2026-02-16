@@ -42,4 +42,15 @@ export interface Service {
   className: string; // We'll map 'bentoSize' to this
   image: string; // URL string from Sanity
   icon: string;
+  content: any;
+}
+
+// types/index.ts
+export interface Industry {
+  title: string; // Changed from name to match your component
+  price: string;
+  features: string[];
+  desc: string; // Added for the card description
+  link: string; // Added for the Link component
+  icon: string; // Added for the emoji/icon
 }

@@ -1,5 +1,4 @@
 "use client";
-import { industries } from "@/data/industries";
 import { Industry } from "@/types";
 import {
   motion,
@@ -11,6 +10,9 @@ import {
 import Link from "next/link";
 import React, { useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { INDUSTRIES } from "@/data/industries";
+
+const industries = INDUSTRIES;
 
 function IndustryCard({ industry }: { industry: Industry; index: number }) {
   let mouseX = useMotionValue(0);

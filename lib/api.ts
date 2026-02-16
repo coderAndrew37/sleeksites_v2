@@ -250,3 +250,23 @@ export async function getProjectCategories(): Promise<
     return [];
   }
 }
+
+export async function getServiceBySlug(slug: string): Promise<Service | null> {
+  const query = groq`*[_type == "service" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    desc,
+    icon,
+    "image": mainImage.asset->url,
+    content,
+    "categoryTitle": title // Used to fetch related projects
+  }`;
+
+  try {
+    return await client.fetch(query, { slug });
+  } catch (error) {
+    console.error("Service detail fetch error:", error);
+    return null;
+  }
+}
