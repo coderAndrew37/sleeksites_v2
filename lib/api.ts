@@ -147,26 +147,6 @@ export async function getPostsByTag(
   }
 }
 
-export const projectFields = groq`
-  _id,
-  title,
-  "slug": slug.current,
-  category,
-  excerpt,
-  "image": mainImage.asset->url,
-  technologies,
-  featured,
-  order
-`;
-
-export async function getProjects(): Promise<Project[]> {
-  const query = groq`*[_type == "project"] | order(order asc, _createdAt desc) {
-    ${projectFields}
-  }`;
-
-  return await client.fetch(query);
-}
-
 export const serviceFields = groq`
   _id,
   title,
@@ -186,6 +166,71 @@ export async function getServices(): Promise<Service[]> {
     return await client.fetch(query);
   } catch (error) {
     console.error("Service fetch error:", error);
+    return [];
+  }
+}
+
+export const projectFields = groq`
+  _id,
+  title,
+  "slug": slug.current,
+  "category": category->title, 
+  excerpt,
+  "image": mainImage.asset->url,
+  technologies,
+  featured,
+  order,
+  "variant": theme.backgroundStyle 
+`;
+
+export async function getProjects(): Promise<Project[]> {
+  const query = groq`*[_type == "project"] | order(order asc, _createdAt desc) {
+    ${projectFields}
+  }`;
+
+  try {
+    return await client.fetch(query);
+  } catch (error) {
+    console.error("Project fetch error:", error);
+    return [];
+  }
+}
+
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  const query = groq`*[_type == "project" && slug.current == $slug][0]{
+    ${projectFields},
+    results,
+    body[]{
+      ...,
+      _type == "image" => {
+        ...,
+        "assetUrl": asset->url
+      }
+    },
+    theme,
+    seo
+  }`;
+
+  try {
+    return await client.fetch(query, { slug });
+  } catch (error) {
+    console.error("Project detail fetch error:", error);
+    return null;
+  }
+}
+
+export async function getRelatedProjects(
+  category: string,
+  currentId: string,
+): Promise<Project[]> {
+  const query = groq`*[_type == "project" && category->title == $category && _id != $currentId][0...2] {
+    ${projectFields}
+  }`;
+
+  try {
+    return await client.fetch(query, { category, currentId });
+  } catch (error) {
+    console.error("Related projects fetch error:", error);
     return [];
   }
 }

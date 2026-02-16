@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { BlogPost } from "../types/blog";
+import BentoCard from "./BentoCard"; // Using the shared component
 
 interface BlogSectionProps {
   posts: BlogPost[];
@@ -13,7 +13,7 @@ interface BlogSectionProps {
 export function BlogSection({ posts }: BlogSectionProps) {
   if (!posts || posts.length === 0) return null;
 
-  // Image fallback logic consistent with BlogCard
+  // Helper to ensure we have a valid image string
   const getImg = (post: BlogPost) =>
     typeof post.mainImage === "string" ? post.mainImage : "/placeholder.jpg";
 
@@ -50,84 +50,32 @@ export function BlogSection({ posts }: BlogSectionProps) {
           </Link>
         </div>
 
-        {/* --- Bento Grid --- */}
+        {/* --- Unified Bento Grid --- */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 min-h-[650px]">
-          {/* Main Featured Post (7 Columns) */}
+          {/* Main Featured Post (Occupies 7 Columns) */}
           {posts[0] && (
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="md:col-span-7 relative group rounded-[2.5rem] md:rounded-[3rem] overflow-hidden bg-slate-900 flex flex-col justify-end min-h-[500px]"
-            >
-              <Image
-                src={getImg(posts[0])}
-                alt={posts[0].title}
-                fill
-                className="absolute inset-0 object-cover opacity-70 group-hover:scale-105 transition-transform duration-1000 ease-out"
-                priority
-              />
-              {/* High-end gradient overlay for readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/20 to-transparent" />
-
-              <div className="relative z-10 p-8 md:p-14">
-                <span className="bg-blue-600 text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-6 inline-block">
-                  {posts[0].category}
-                </span>
-                <h3 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight leading-[1.1] max-w-xl">
-                  {posts[0].title}
-                </h3>
-                <p className="text-slate-300 text-lg line-clamp-2 mb-8 max-w-lg font-light">
-                  {posts[0].excerpt}
-                </p>
-                <Link
-                  href={`/blog/${posts[0].slug}`}
-                  className="group/btn inline-flex items-center gap-3 text-white font-bold text-lg"
-                >
-                  Read Full Story
-                  <span className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover/btn:bg-white group-hover/btn:text-slate-900 transition-all duration-300">
-                    <ArrowRight size={24} />
-                  </span>
-                </Link>
-              </div>
-            </motion.div>
+            <BentoCard
+              title={posts[0].title}
+              excerpt={posts[0].excerpt}
+              category={posts[0].category}
+              image={getImg(posts[0])}
+              link={`/blog/${posts[0].slug}`}
+              className="md:col-span-7" // Uses the internal h-full of BentoCard
+            />
           )}
 
-          {/* Side Column (5 Columns) */}
-          <div className="md:col-span-5 grid grid-rows-1 md:grid-rows-2 gap-6">
-            {posts.slice(1, 3).map((post, i) => (
-              <Link
-                key={post._id || i}
-                href={`/blog/${post.slug}`}
-                className="block h-full"
-              >
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="h-full bg-slate-50 border border-slate-100 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between hover:bg-white hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] hover:border-blue-100 transition-all duration-500 group"
-                >
-                  <div>
-                    <div className="flex justify-between items-start">
-                      <span className="text-blue-600 font-bold text-[10px] uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">
-                        {post.category}
-                      </span>
-                      <span className="text-slate-400 text-[10px] font-medium uppercase tracking-tighter">
-                        {post.readTime} min read
-                      </span>
-                    </div>
-                    <h4 className="text-2xl font-bold mt-6 group-hover:text-blue-600 transition-colors leading-tight">
-                      {post.title}
-                    </h4>
-                  </div>
-
-                  <div className="flex items-center gap-2 font-bold text-sm text-slate-900 mt-8 group-hover:gap-4 transition-all">
-                    Explore Insights{" "}
-                    <ArrowRight size={18} className="text-blue-600" />
-                  </div>
-                </motion.div>
-              </Link>
+          {/* Side Column Stack (Occupies 5 Columns) */}
+          <div className="md:col-span-5 grid grid-rows-2 gap-6">
+            {posts.slice(1, 3).map((post) => (
+              <BentoCard
+                key={post._id}
+                title={post.title}
+                subtitle={`${post.readTime} min read`}
+                category={post.category}
+                image={getImg(post)}
+                link={`/blog/${post.slug}`}
+                className="md:col-span-1" // Relative to the 5-column parent
+              />
             ))}
           </div>
         </div>

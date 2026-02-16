@@ -9,10 +9,31 @@ export type Project = {
   _id: string;
   title: string;
   slug: string;
-  category: string;
-  image: string;
+  category: string; // Dereferenced title from projectCategory
+  image: string; // URL from mainImage.asset->url
+  excerpt?: string;
+  technologies?: string[]; // Array of strings from Sanity
+  featured: boolean;
+  order?: number;
+  // Matches the 'theme' object in your Sanity schema
+  theme?: {
+    accentColor?: string;
+    backgroundStyle: "dark" | "light" | "gradient";
+    heroOverlayOpacity?: number;
+  };
+  // Matches the 'results' array in your Sanity schema
+  results?: {
+    label: string;
+    value: string;
+  }[];
+  // Portable Text content for the detail page
+  body?: any[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    ogImage?: string;
+  };
 };
-
 export interface Service {
   _id: string;
   title: string;
