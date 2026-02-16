@@ -13,13 +13,15 @@ export default function FinalCTA() {
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            className="relative rounded-4xl overflow-hidden shadow-2xl border border-slate-100"
+            /* Add 'aspect-square' or 'aspect-video' or a custom h-[500px] */
+            className="relative aspect-square md:aspect-[4/5] rounded-4xl overflow-hidden shadow-2xl border border-slate-100"
           >
             <Image
               src="/agency-working.jpg"
               alt="Digital Agency at work"
               className="w-full h-auto object-cover"
               fill
+              priority
             />
 
             {/* Floating Stats Badge (The "30K+" element) */}

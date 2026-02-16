@@ -13,22 +13,29 @@ import Testimonials from "./ui/Testimonials";
 import { BlogSection } from "./ui/BlogSection";
 import FAQ from "./ui/FAQ";
 import { BlogPost } from "./types/blog";
+import { Project, Service } from "@/types";
 
 interface HomeClientProps {
   initialPosts: BlogPost[];
+  projects: Project[];
+  services: Service[];
 }
 
-export default function HomeClient({ initialPosts }: HomeClientProps) {
+export default function HomeClient({
+  initialPosts,
+  projects,
+  services,
+}: HomeClientProps) {
   return (
     <div className="bg-white">
       <Hero />
       <Trustbar />
-      <BentoServices />
+      <BentoServices services={services} />
       <HowWeWork />
       <FinalCTA />
       <FeatureFocus />
       <Industries />
-      <Portfolio />
+      <Portfolio projects={projects} />
       <Testimonials />
       {/* BlogSection now receives data from the server page */}
       <BlogSection posts={initialPosts} />

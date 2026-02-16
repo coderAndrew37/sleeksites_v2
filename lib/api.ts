@@ -2,6 +2,7 @@ import { BlogPost, Tag } from "@/app/components/types/blog";
 import "server-only";
 import { client } from "./sanity/client";
 import { groq } from "next-sanity";
+import { Project, Service } from "@/types";
 
 export const postFields = groq`
   _id,
@@ -143,5 +144,48 @@ export async function getPostsByTag(
   } catch (error) {
     console.error("Tag page fetch error:", error);
     return null;
+  }
+}
+
+export const projectFields = groq`
+  _id,
+  title,
+  "slug": slug.current,
+  category,
+  excerpt,
+  "image": mainImage.asset->url,
+  technologies,
+  featured,
+  order
+`;
+
+export async function getProjects(): Promise<Project[]> {
+  const query = groq`*[_type == "project"] | order(order asc, _createdAt desc) {
+    ${projectFields}
+  }`;
+
+  return await client.fetch(query);
+}
+
+export const serviceFields = groq`
+  _id,
+  title,
+  "slug": slug.current,
+  "desc": desc,
+  icon,
+  "image": mainImage.asset->url,
+  "className": bentoSize
+`;
+
+export async function getServices(): Promise<Service[]> {
+  const query = groq`*[_type == "service"] | order(orderRank asc) {
+    ${serviceFields}
+  }`;
+
+  try {
+    return await client.fetch(query);
+  } catch (error) {
+    console.error("Service fetch error:", error);
+    return [];
   }
 }

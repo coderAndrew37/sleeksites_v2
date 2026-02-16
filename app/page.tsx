@@ -1,7 +1,7 @@
 // app/page.tsx
 import { Metadata } from "next";
 import HomeClient from "./components/HomeClient";
-import { getPosts } from "@/lib/api"; // We'll create this next
+import { getPosts, getProjects, getServices } from "@/lib/api"; // We'll create this next
 
 export const metadata: Metadata = {
   title: "SleekSites | High-Performance Web Development Agency",
@@ -22,7 +22,8 @@ export default async function Page() {
   // 1. Data Fetching (Server-Side)
   // We limit to 3 here so the client only receives what it needs to render
   const posts = await getPosts(3);
-
+  const projects = await getProjects();
+  const services = await getServices();
   // 2. JSON-LD Structured Data
   const jsonLd = {
     "@context": "https://schema.org",
@@ -46,7 +47,11 @@ export default async function Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* Pass the data into the Client Component */}
-      <HomeClient initialPosts={posts} />
+      <HomeClient
+        initialPosts={posts}
+        projects={projects}
+        services={services}
+      />
     </>
   );
 }
