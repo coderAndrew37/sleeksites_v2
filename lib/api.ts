@@ -234,3 +234,19 @@ export async function getRelatedProjects(
     return [];
   }
 }
+
+export async function getProjectCategories(): Promise<
+  { title: string; slug: string }[]
+> {
+  const query = groq`*[_type == "projectCategory"] | order(title asc) {
+    title,
+    "slug": slug.current
+  }`;
+
+  try {
+    return await client.fetch(query);
+  } catch (error) {
+    console.error("Category fetch error:", error);
+    return [];
+  }
+}

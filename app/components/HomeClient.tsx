@@ -40,7 +40,6 @@ export default function HomeClient({
       {/* BlogSection now receives data from the server page */}
       <BlogSection posts={initialPosts} />
       <FAQ />
-      <ContactCTA />
     </div>
   );
 }

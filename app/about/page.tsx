@@ -284,35 +284,6 @@ export default function About(): JSX.Element {
           </div>
         </div>
       </section>
-
-      {/* CTA */}
-      <section className="py-24 bg-blue-600 relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-20 opacity-10">
-          <Rocket className="w-64 h-64 text-white -rotate-12" />
-        </div>
-        <div className="container mx-auto px-6 text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-8">
-            Let's Make Your Digital Mark.
-          </h2>
-          <div className="flex flex-wrap justify-center gap-6">
-            <Button
-              variant="secondary"
-              size="xl"
-              onClick={() => (window.location.href = "/contact")}
-            >
-              Hire the Agency
-            </Button>
-            <Button
-              variant="outline"
-              className="text-white border-white hover:bg-white hover:text-blue-600"
-              size="xl"
-              onClick={() => (window.location.href = "/portfolio")}
-            >
-              See Portfolios
-            </Button>
-          </div>
-        </div>
-      </section>
     </Layout>
   );
 }
