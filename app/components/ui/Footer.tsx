@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { ArrowUpRight, Linkedin, Mail, Twitter } from "lucide-react";
 import Image from "next/image";
-import { ArrowUpRight, Instagram, Linkedin, Mail, Twitter } from "lucide-react";
+import Link from "next/link";
 // Import your centralized constants
 import {
   CONTACT_EMAIL,
@@ -20,8 +20,14 @@ const Footer = () => {
       { name: "SEO & Growth", href: "/services/seo" },
       { name: "AI Automation", href: "/services/ai" },
     ],
+    locations: [
+      { name: "Nairobi", slug: "nairobi" },
+      { name: "Mombasa", slug: "mombasa" },
+      { name: "Kisumu", slug: "kisumu" },
+      { name: "Nakuru", slug: "nakuru" },
+    ],
     company: [
-      { name: "Work", href: "/portfolio" }, // Updated to match your nav
+      { name: "Work", href: "/portfolio" },
       { name: "About", href: "/about" },
       { name: "Blog", href: "/blog" },
       { name: "Careers", href: "/careers" },
@@ -37,15 +43,9 @@ const Footer = () => {
         href: SOCIAL_LINKS.twitter,
         icon: <Twitter size={16} />,
       },
-      // {
-      //   name: "Instagram",
-      //   href: SOCIAL_LINKS.instagram || "#",
-      //   icon: <Instagram size={16} />,
-      // },
     ],
   };
 
-  // Logic for the pre-footer CTA
   const handleStartProject = () => {
     window.open(getWhatsAppUrl(), "_blank");
   };
@@ -65,8 +65,8 @@ const Footer = () => {
               digital footprint?
             </h3>
             <p className="text-blue-100 font-medium max-w-sm">
-              Let's build something that doesn't just look good, but actually
-              converts.
+              Let&apos;s build something that doesn&apos;t just look good, but
+              actually converts.
             </p>
           </div>
 
@@ -86,18 +86,17 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-2 md:grid-cols-12 gap-y-12 gap-x-8 mb-20">
           {/* Brand Info */}
-          <div className="col-span-2 md:col-span-5">
+          <div className="col-span-2 md:col-span-4">
             <Link href="/" className="inline-block mb-8 group">
-              {/* Use the same professional Image logic as Navbar */}
               <Image
                 src="/logo.png"
                 alt="SleekSites Logo"
                 width={200}
                 height={50}
-                className="h-8 w-auto object-contain brightness-0" // Stays black on white footer
+                className="h-8 w-auto object-contain brightness-0"
               />
             </Link>
-            <p className="text-slate-500 text-lg leading-relaxed max-w-sm mb-8">
+            <p className="text-slate-500 text-lg leading-relaxed max-w-sm mb-8 text-balance">
               Crafting high-performance digital engines for brands that demand
               excellence. Engineered in Nairobi, deployed globally.
             </p>
@@ -117,9 +116,9 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Links Sections */}
-          <div className="col-span-1 md:col-start-7 md:col-span-2">
-            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-8">
+          {/* Links Sections: Services */}
+          <div className="col-span-1 md:col-start-6 md:col-span-2">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 mb-8">
               Services
             </h4>
             <ul className="space-y-4">
@@ -127,7 +126,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-slate-500 hover:text-blue-600 font-medium transition-colors"
+                    className="text-slate-500 hover:text-blue-600 font-medium text-sm transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -136,16 +135,36 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* Links Sections: Locations (Rectified Routes) */}
           <div className="col-span-1 md:col-span-2">
-            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-8">
-              Company
+            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 mb-8">
+              Locations
+            </h4>
+            <ul className="space-y-4">
+              {footerLinks.locations.map((loc) => (
+                <li key={loc.slug}>
+                  <Link
+                    href={`/web-design/${loc.slug}`} // Changed to subdirectory structure
+                    className="text-slate-500 hover:text-blue-600 font-medium text-sm transition-colors"
+                  >
+                    Web Design {loc.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Links Sections: Company */}
+          <div className="col-span-1 md:col-span-1">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 mb-8">
+              Agency
             </h4>
             <ul className="space-y-4">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-slate-500 hover:text-blue-600 font-medium transition-colors"
+                    className="text-slate-500 hover:text-blue-600 font-medium text-sm transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -155,24 +174,24 @@ const Footer = () => {
           </div>
 
           {/* Contact Column */}
-          <div className="col-span-2 md:col-span-2">
-            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-8">
+          <div className="col-span-1 md:col-span-2">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 mb-8">
               Contact
             </h4>
             <ul className="space-y-4">
               <li>
                 <a
                   href={`mailto:${CONTACT_EMAIL}`}
-                  className="group flex items-center gap-2 text-slate-500 hover:text-blue-600 font-medium transition-colors"
+                  className="group flex items-center gap-2 text-slate-500 hover:text-blue-600 font-medium text-sm transition-colors"
                 >
                   <Mail
-                    size={16}
+                    size={14}
                     className="text-slate-300 group-hover:text-blue-600"
                   />
-                  Email Us
+                  Email
                 </a>
               </li>
-              <li className="text-slate-500 font-medium leading-relaxed">
+              <li className="text-slate-500 font-medium text-sm leading-relaxed">
                 Nairobi, Kenya
                 <br />
                 Kilimani, Ngong Rd.
@@ -183,22 +202,24 @@ const Footer = () => {
 
         {/* --- Bottom Legal Bar --- */}
         <div className="py-10 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2 text-slate-400 text-sm font-medium">
+          <div className="flex items-center gap-2 text-slate-400 text-xs font-medium">
             <span>© {currentYear} SleekSites Agency</span>
             <span className="hidden md:block w-1 h-1 rounded-full bg-slate-200" />
-            <span className="hidden md:block">Handcrafted with precision</span>
+            <span className="hidden md:block text-[10px] uppercase tracking-widest">
+              Handcrafted with precision
+            </span>
           </div>
 
           <div className="flex gap-8">
             <Link
               href="/privacy"
-              className="text-slate-400 hover:text-slate-900 text-sm font-medium transition-colors"
+              className="text-slate-400 hover:text-slate-900 text-xs font-medium transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms"
-              className="text-slate-400 hover:text-slate-900 text-sm font-medium transition-colors"
+              className="text-slate-400 hover:text-slate-900 text-xs font-medium transition-colors"
             >
               Terms of Service
             </Link>
