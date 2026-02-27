@@ -5,6 +5,8 @@ import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+// Import the WhatsApp helper
+import { getWhatsAppUrl } from "@/lib/constants/contact";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,12 +26,20 @@ export default function Hero() {
     { scope: container },
   );
 
+  // WhatsApp Redirect Handler
+  const handleHeroCTA = () => {
+    const url = getWhatsAppUrl(
+      "Hello SleekSites! I just saw your high-performance experiences on the website. I'd like to get started on a project.",
+    );
+    window.open(url, "_blank");
+  };
+
   return (
     <section ref={container} className="relative overflow-hidden text-white">
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/hero-bg.jpg"
+          src="/hero-background.jpg"
           alt="Hero background"
           fill
           priority
@@ -54,7 +64,10 @@ export default function Hero() {
           </p>
 
           <div className="hero-animate mt-8">
-            <button className="bg-blue-600 hover:bg-blue-700 transition-colors px-8 py-4 rounded-lg font-semibold text-lg shadow-lg shadow-blue-600/30">
+            <button
+              onClick={handleHeroCTA}
+              className="bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all px-8 py-4 rounded-lg font-semibold text-lg shadow-lg shadow-blue-600/30 cursor-pointer"
+            >
               Get Started
             </button>
           </div>
@@ -64,6 +77,7 @@ export default function Hero() {
         <div className="hero-animate flex justify-center lg:justify-end">
           <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 w-full max-w-md shadow-2xl">
             <div className="flex -space-x-3 mb-4">
+              {/* Pro-tip: Use real small avatar images here later for extra realism */}
               <div className="w-12 h-12 rounded-full bg-blue-500 border-2 border-white" />
               <div className="w-12 h-12 rounded-full bg-pink-500 border-2 border-white" />
               <div className="w-12 h-12 rounded-full bg-yellow-400 border-2 border-white" />
@@ -78,7 +92,7 @@ export default function Hero() {
             </div>
 
             <p className="text-gray-300 text-sm mt-2">
-              Overall Reviews from our satisfied clients.
+              Overall Reviews from our satisfied clients across Kenya.
             </p>
           </div>
         </div>
@@ -107,14 +121,14 @@ export default function Hero() {
         ].map((item, index) => (
           <div
             key={index}
-            className={`rounded-xl p-8 text-center border ${
+            className={`rounded-xl p-8 text-center border shadow-xl transition-transform hover:-translate-y-1 ${
               item.highlight
-                ? "bg-blue-600 text-white border-blue-600"
+                ? "bg-blue-600 text-white border-blue-600 shadow-blue-600/20"
                 : "bg-white text-gray-800 border-gray-200"
             }`}
           >
             <h4 className="font-semibold text-lg mb-2">{item.title}</h4>
-            <p className="text-sm">{item.desc}</p>
+            <p className="text-sm opacity-90">{item.desc}</p>
           </div>
         ))}
       </div>

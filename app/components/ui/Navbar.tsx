@@ -24,7 +24,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Use the helper from constants
   const handleStartProject = () => {
     const whatsappUrl = getWhatsAppUrl();
     window.open(whatsappUrl, "_blank");
@@ -33,17 +32,11 @@ const Navbar = () => {
   const menuVariants: Variants = {
     closed: {
       x: "100%",
-      transition: {
-        duration: 0.5,
-        ease: [0.76, 0, 0.24, 1],
-      },
+      transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] },
     },
     open: {
       x: 0,
-      transition: {
-        duration: 0.5,
-        ease: [0.76, 0, 0.24, 1],
-      },
+      transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] },
     },
   };
 
@@ -63,34 +56,41 @@ const Navbar = () => {
               : "bg-transparent py-2 px-0 rounded-none"
           }`}
         >
+          {/* Logo with Dynamic Inversion */}
           <Link
             href="/"
             className="relative flex items-center group transition-transform duration-300 active:scale-95"
           >
             <Image
               src="/logo.png"
-              alt="SleekSites | High-Performance Digital Systems"
-              width={1400}
-              height={1400}
-              className={`h-9 md:h-11 w-auto object-contain transition-all duration-500 ${
+              alt="SleekSites Logo"
+              width={400}
+              height={100}
+              className={`h-8 md:h-10 w-auto object-contain transition-all duration-500 ${
                 scrolled
-                  ? "brightness-0 opacity-100" // Professional solid black on white scroll
-                  : "brightness-0 invert opacity-90 hover:opacity-100" // Clean white on transparent
+                  ? "brightness-0" // Black on scroll
+                  : "brightness-0 invert" // White on dark hero
               }`}
               priority
             />
           </Link>
 
-          {/* Desktop Links */}
+          {/* Desktop Links with Dynamic Color */}
           <div className="hidden md:flex items-center gap-2">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className="relative px-4 py-2 text-sm font-bold text-slate-600 hover:text-blue-600 transition-colors group"
+                className={`relative px-4 py-2 text-sm font-bold transition-colors group ${
+                  scrolled ? "text-slate-600" : "text-white"
+                } hover:text-blue-600`}
               >
                 {link.name}
-                <motion.div className="absolute inset-0 bg-blue-50 rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <motion.div
+                  className={`absolute inset-0 rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity ${
+                    scrolled ? "bg-blue-50" : "bg-white/10"
+                  }`}
+                />
               </Link>
             ))}
           </div>
@@ -101,26 +101,32 @@ const Navbar = () => {
               onClick={handleStartProject}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="hidden md:flex bg-slate-950 text-white px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-950/10 cursor-pointer"
+              className={`hidden md:flex px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all shadow-xl cursor-pointer ${
+                scrolled
+                  ? "bg-slate-950 text-white hover:bg-blue-600"
+                  : "bg-white text-slate-950 hover:bg-blue-50"
+              }`}
             >
               Start a Project
             </motion.button>
 
-            {/* Elite Toggle */}
+            {/* Mobile Toggle Button */}
             <button
               aria-label="menu toggle"
               onClick={() => setIsOpen(!isOpen)}
-              className="relative z-[110] w-12 h-12 flex md:hidden flex-col items-center justify-center gap-1.5 bg-slate-950 rounded-full group shadow-lg shadow-slate-950/20 cursor-pointer"
+              className={`relative z-[110] w-12 h-12 flex md:hidden flex-col items-center justify-center gap-1.5 rounded-full group shadow-lg transition-colors cursor-pointer ${
+                scrolled ? "bg-slate-950" : "bg-white"
+              }`}
             >
               <motion.span
                 animate={isOpen ? { rotate: 45, y: 4.5 } : { rotate: 0, y: 0 }}
-                className="w-5 h-0.5 bg-white rounded-full"
+                className={`w-5 h-0.5 rounded-full ${scrolled ? "bg-white" : "bg-slate-950"}`}
               />
               <motion.span
                 animate={
                   isOpen ? { rotate: -45, y: -4.5 } : { rotate: 0, y: 0 }
                 }
-                className="w-5 h-0.5 bg-white rounded-full"
+                className={`w-5 h-0.5 rounded-full ${scrolled ? "bg-white" : "bg-slate-950"}`}
               />
             </button>
           </div>
@@ -131,13 +137,12 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-slate-950/20 backdrop-blur-sm z-[80]"
+              className="fixed inset-0 bg-slate-950/40 backdrop-blur-md z-[80]"
             />
 
             <motion.div
@@ -173,14 +178,13 @@ const Navbar = () => {
                 </nav>
               </div>
 
-              {/* Minimal Bottom CTA */}
               <div className="mt-auto pb-10">
                 <button
                   onClick={() => {
                     handleStartProject();
                     setIsOpen(false);
                   }}
-                  className="flex items-center justify-center gap-3 bg-blue-600 text-white w-full py-5 rounded-2xl font-bold text-sm tracking-tight shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors cursor-pointer"
+                  className="flex items-center justify-center gap-3 bg-blue-600 text-white w-full py-5 rounded-2xl font-bold text-sm tracking-tight shadow-lg hover:bg-blue-700 transition-colors cursor-pointer"
                 >
                   Start a Project
                 </button>

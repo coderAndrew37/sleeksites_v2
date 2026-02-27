@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+// Import your constants and helper
+import { PHONE_NUMBER, getWhatsAppUrl } from "@/lib/constants/contact";
 
 const faqs = [
   {
@@ -29,14 +31,23 @@ const faqs = [
 export default function FAQ() {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
 
+  // Helper for the WhatsApp redirect
+  const handleConsultation = () => {
+    const url = getWhatsAppUrl(
+      "Hello! I have some questions after reading your FAQ. I'd like to get a free consultation.",
+    );
+    window.open(url, "_blank");
+  };
+
   return (
     <section className="py-24 px-6 bg-white">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
-        {/* Left Side: Sticky Image (Digitali Style) */}
+        {/* Left Side: Sticky Image */}
         <div className="relative group">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
             className="sticky top-32 rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100"
           >
             <img
@@ -44,7 +55,6 @@ export default function FAQ() {
               alt="Our workspace and creative tools"
               className="w-full h-[500px] object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            {/* Soft Overlay to match the orange brand accent */}
             <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/10 to-transparent pointer-events-none" />
           </motion.div>
         </div>
@@ -66,7 +76,11 @@ export default function FAQ() {
                   className="w-full py-6 flex items-center justify-between text-left group"
                 >
                   <span
-                    className={`text-xl font-bold tracking-tight transition-colors ${activeIndex === i ? "text-orange-500" : "text-slate-900 group-hover:text-blue-600"}`}
+                    className={`text-xl font-bold tracking-tight transition-colors ${
+                      activeIndex === i
+                        ? "text-orange-500"
+                        : "text-slate-900 group-hover:text-blue-600"
+                    }`}
                   >
                     {faq.question}
                   </span>
@@ -98,9 +112,10 @@ export default function FAQ() {
           </div>
         </div>
       </div>
+
       {/* Bottom CTA */}
       <div className="text-center mt-12">
-        <div className="bg-linear-to-r from-blue-50 to-blue-100 rounded-2xl p-8">
+        <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-8">
           <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
             Still Have Questions?
           </h3>
@@ -109,21 +124,21 @@ export default function FAQ() {
             within hours.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {/* WhatsApp CTA */}
             <button
-              onClick={() =>
-                document
-                  .getElementById("cta-section")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="bg-blue-700 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-800 transition-colors"
+              onClick={handleConsultation}
+              className="bg-blue-700 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-800 transition-colors shadow-lg shadow-blue-700/20 active:scale-95 transition-transform cursor-pointer"
             >
               Get Free Consultation
             </button>
+
+            {/* Call CTA using Constant */}
             <a
-              href="tel:+254700000000"
-              className="border-2 border-blue-700 text-blue-700 px-8 py-4 rounded-xl font-bold hover:bg-blue-700 hover:text-white transition-colors"
+              href={`tel:+${PHONE_NUMBER}`}
+              className="border-2 border-blue-700 text-blue-700 px-8 py-4 rounded-xl font-bold hover:bg-blue-700 hover:text-white transition-colors active:scale-95 transition-transform flex items-center justify-center"
             >
-              Call Us: +254 700 000 000
+              Call Us: +
+              {PHONE_NUMBER.replace(/(\d{3})(\d{3})(\d+)/, "$1 $2 $3")}
             </a>
           </div>
         </div>
