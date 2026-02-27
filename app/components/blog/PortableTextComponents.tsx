@@ -71,27 +71,42 @@ const components: PortableTextComponents = {
     ),
 
     code: ({ value }) => (
-      <div className="my-10 rounded-2xl overflow-hidden shadow-2xl border border-slate-800 bg-[#282c34]">
-        {value.filename && (
-          <div className="px-6 py-3 border-b border-slate-700 text-slate-400 text-xs font-mono flex justify-between items-center">
-            <span>{value.filename}</span>
-            <span className="text-[10px] uppercase tracking-widest text-slate-500">
-              {value.language}
-            </span>
-          </div>
-        )}
-        <SyntaxHighlighter
-          language={value.language || "typescript"}
-          style={oneDark}
-          customStyle={{
-            margin: 0,
-            padding: "1.5rem",
-            fontSize: "14px",
-            background: "transparent",
-          }}
-        >
-          {value.code || ""}
-        </SyntaxHighlighter>
+      <div className="my-10 group relative">
+        {/* Subtle background glow for technical depth */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/10 to-transparent rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500" />
+
+        <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-800 bg-[#282c34]">
+          {value.filename && (
+            <div className="px-6 py-3 border-b border-white/5 bg-white/5 text-slate-400 text-[10px] font-mono flex justify-between items-center tracking-widest uppercase">
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-blue-500" />
+                {value.filename}
+              </span>
+              <span className="opacity-50">{value.language}</span>
+            </div>
+          )}
+          <SyntaxHighlighter
+            language={value.language || "typescript"}
+            style={oneDark}
+            customStyle={{
+              margin: 0,
+              padding: "1.5rem",
+              fontSize: "13px",
+              lineHeight: "1.6",
+              background: "transparent", // Let the parent container handle the color
+              fontFamily: "'Fira Code', 'JetBrains Mono', monospace",
+            }}
+            lineNumberStyle={{
+              minWidth: "2em",
+              paddingRight: "1em",
+              color: "#4b5263",
+              textAlign: "right",
+            }}
+            showLineNumbers={true}
+          >
+            {value.code || ""}
+          </SyntaxHighlighter>
+        </div>
       </div>
     ),
 

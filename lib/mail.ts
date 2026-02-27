@@ -11,7 +11,7 @@ const supabase = createClient(
 );
 
 export const sendBlueprintEmail = async (email: string, name: string) => {
-  const isProd = process.env.NODE_ENV === "development";
+  const isProd = process.env.NODE_ENV === "production";
   const myEmail = process.env.MY_EMAIL || "omolloandrew37@gmail.com";
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
