@@ -1,7 +1,7 @@
 "use client";
 import { JSX, useState } from "react";
-import Button from "../components/ui/Button";
-import Layout from "../components/layout/Layout";
+import Button from "../../components/ui/Button";
+import Layout from "../../components/layout/Layout";
 interface FormData {
   name: string;
   email: string;
@@ -28,7 +28,7 @@ export default function Contact(): JSX.Element {
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { getServices } from "@/lib/api";
 import Layout from "@/app/components/layout/Layout";
-import BentoServices from "../components/ui/BentoServices";
+import BentoServices from "../../components/ui/BentoServices";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 

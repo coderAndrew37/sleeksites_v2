@@ -1,6 +1,6 @@
 // app/page.tsx
 import { Metadata } from "next";
-import HomeClient from "./components/HomeClient";
+import HomeClient from "../components/HomeClient";
 import { getPosts, getProjects, getServices } from "@/lib/api"; // We'll create this next
 
 export const metadata: Metadata = {

@@ -1,7 +1,7 @@
 "use client";
 import { JSX } from "react";
-import Button from "../components/ui/Button";
-import Layout from "../components/layout/Layout";
+import Button from "../../components/ui/Button";
+import Layout from "../../components/layout/Layout";
 import { motion } from "framer-motion";
 import {
   Users,

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import Button from "../components/ui/Button";
+import Button from "../../components/ui/Button";
 
 interface Category {
   title: string;

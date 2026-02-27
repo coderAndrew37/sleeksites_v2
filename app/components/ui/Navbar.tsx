@@ -1,6 +1,9 @@
 "use client";
+
+import { getWhatsAppUrl } from "@/lib/constants/contact";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -21,13 +24,17 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 1. Fixed the TypeScript Error by defining the Variants type explicitly
+  // Use the helper from constants
+  const handleStartProject = () => {
+    const whatsappUrl = getWhatsAppUrl();
+    window.open(whatsappUrl, "_blank");
+  };
+
   const menuVariants: Variants = {
     closed: {
       x: "100%",
       transition: {
         duration: 0.5,
-        // Using a standard ease string or casting the array
         ease: [0.76, 0, 0.24, 1],
       },
     },
@@ -56,13 +63,22 @@ const Navbar = () => {
               : "bg-transparent py-2 px-0 rounded-none"
           }`}
         >
-          {/* Logo */}
           <Link
             href="/"
-            className="text-2xl font-black tracking-tighter text-slate-900 flex items-center gap-1 group"
+            className="relative flex items-center group transition-transform duration-300 active:scale-95"
           >
-            <div className="w-2 h-2 bg-blue-600 rounded-full group-hover:scale-150 transition-transform" />
-            SLEEKSITES<span className="text-blue-600">.</span>
+            <Image
+              src="/logo.png"
+              alt="SleekSites | High-Performance Digital Systems"
+              width={1400}
+              height={1400}
+              className={`h-9 md:h-11 w-auto object-contain transition-all duration-500 ${
+                scrolled
+                  ? "brightness-0 opacity-100" // Professional solid black on white scroll
+                  : "brightness-0 invert opacity-90 hover:opacity-100" // Clean white on transparent
+              }`}
+              priority
+            />
           </Link>
 
           {/* Desktop Links */}
@@ -82,18 +98,19 @@ const Navbar = () => {
           {/* CTA & Toggle */}
           <div className="flex items-center gap-3">
             <motion.button
+              onClick={handleStartProject}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="hidden md:flex bg-slate-950 text-white px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-950/10"
+              className="hidden md:flex bg-slate-950 text-white px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-950/10 cursor-pointer"
             >
               Start a Project
             </motion.button>
 
-            {/* 2. Elite Toggle: Hidden on Desktop (md:hidden) */}
+            {/* Elite Toggle */}
             <button
               aria-label="menu toggle"
               onClick={() => setIsOpen(!isOpen)}
-              className="relative z-[110] w-12 h-12 flex md:hidden flex-col items-center justify-center gap-1.5 bg-slate-950 rounded-full group shadow-lg shadow-slate-950/20"
+              className="relative z-[110] w-12 h-12 flex md:hidden flex-col items-center justify-center gap-1.5 bg-slate-950 rounded-full group shadow-lg shadow-slate-950/20 cursor-pointer"
             >
               <motion.span
                 animate={isOpen ? { rotate: 45, y: 4.5 } : { rotate: 0, y: 0 }}
@@ -110,7 +127,7 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
-      {/* --- MINIMALIST MOBILE SIDE DRAWER --- */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -158,13 +175,15 @@ const Navbar = () => {
 
               {/* Minimal Bottom CTA */}
               <div className="mt-auto pb-10">
-                <Link
-                  href="/contact"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center gap-3 bg-blue-600 text-white w-full py-5 rounded-2xl font-bold text-sm tracking-tight shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors"
+                <button
+                  onClick={() => {
+                    handleStartProject();
+                    setIsOpen(false);
+                  }}
+                  className="flex items-center justify-center gap-3 bg-blue-600 text-white w-full py-5 rounded-2xl font-bold text-sm tracking-tight shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors cursor-pointer"
                 >
                   Start a Project
-                </Link>
+                </button>
                 <p className="text-center mt-6 text-xs font-medium text-slate-400 tracking-wide">
                   Available for new projects Q2 2026
                 </p>

@@ -1,5 +1,5 @@
 import { getProjects } from "@/lib/api";
-import BentoCard from "../components/ui/BentoCard";
+import BentoCard from "../../components/ui/BentoCard";
 
 export const metadata = {
   title: "Portfolio | Our Work",

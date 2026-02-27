@@ -1,4 +1,4 @@
-import LegalLayout from "../components/layout/LegalLayout";
+import LegalLayout from "../../components/layout/LegalLayout";
 
 export default function TermsOfService() {
   return (
