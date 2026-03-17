@@ -18,6 +18,7 @@ export default function ConstructionLeadMagnet() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,7 +30,7 @@ export default function ConstructionLeadMagnet() {
     const toastId = toast.loading("Preparing your blueprint...");
 
     try {
-      const result = await handleLeadGeneration({ email, name });
+      const result = await handleLeadGeneration({ email, name, phone });
 
       if (result && "error" in result) {
         const errorMessage =
@@ -40,7 +41,6 @@ export default function ConstructionLeadMagnet() {
         toast.error(errorMessage, { id: toastId });
       } else if (result?.success) {
         toast.success("Blueprint sent! Redirecting...", { id: toastId });
-
         setTimeout(() => {
           router.push("/thank-you");
         }, 1500);
@@ -88,19 +88,19 @@ export default function ConstructionLeadMagnet() {
             <p className="text-xl md:text-2xl text-slate-600 mb-8 leading-tight font-medium">
               You execute multi-million projects.
               <br />
-              But online, you don’t look like the company that wins them.
+              But online, you don't look like the company that wins them.
             </p>
 
             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 mb-10 rounded-r-2xl">
               <p className="text-slate-700 leading-relaxed italic">
                 "Before a corporate client calls you, they Google you. If your
-                digital presence doesn’t signal authority in 5 seconds, they
+                digital presence doesn't signal authority in 5 seconds, they
                 shortlist someone else."
               </p>
             </div>
 
             <h3 className="text-lg font-black uppercase tracking-widest text-slate-900 mb-6">
-              What You’ll Master Inside:
+              What You'll Master Inside:
             </h3>
 
             <div className="space-y-4 mb-12">
@@ -152,13 +152,13 @@ export default function ConstructionLeadMagnet() {
               </div>
 
               <h3 className="text-xl font-bold mb-2">Get Instant Access</h3>
-
               <p className="text-xs text-slate-400 mb-6">
                 Built specifically for construction firms competing for bigger
                 contracts.
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Name */}
                 <div className="space-y-1">
                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">
                     Your Name
@@ -173,6 +173,22 @@ export default function ConstructionLeadMagnet() {
                   />
                 </div>
 
+                {/* Phone */}
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="+254 7XX XXX XXX"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 focus:ring-2 focus:ring-blue-600 outline-none transition-all placeholder:text-slate-600 text-white"
+                  />
+                </div>
+
+                {/* Email */}
                 <div className="space-y-1">
                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">
                     Professional Email
