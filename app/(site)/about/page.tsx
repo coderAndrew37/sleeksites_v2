@@ -11,6 +11,7 @@ import {
   Rocket,
   ShieldCheck,
 } from "lucide-react";
+import Image from "next/image";
 
 interface TeamMember {
   id: string;
@@ -24,35 +25,19 @@ interface TeamMember {
 const teamMembers: TeamMember[] = [
   {
     id: "1",
-    name: "John Kamau",
+    name: "Omollo Andrew",
     role: "Founder & Lead Developer",
-    bio: "With over 8 years of experience, John bridges the gap between complex engineering and business strategy.",
-    image: "/team/john.jpg",
+    bio: "With over 4 years of experience, Andrew bridges the gap between complex engineering and business strategy.",
+    image: "/team/andrew.jpg",
     skills: ["Web Development", "Digital Strategy", "Team Leadership"],
   },
   {
     id: "2",
-    name: "Sarah Wanjiku",
+    name: "Vedel Ndenga",
     role: "Senior Web Designer",
-    bio: "Sarah specializes in high-conversion UI/UX. She ensures every pixel serves a business purpose.",
-    image: "/team/sarah.jpg",
+    bio: "Vedel specializes in high-conversion UI/UX. She ensures every pixel serves a business purpose.",
+    image: "/team/vedel.jpg",
     skills: ["UI/UX Design", "Brand Identity", "Optimization"],
-  },
-  {
-    id: "3",
-    name: "David Ochieng",
-    role: "SEO Specialist",
-    bio: "David turns search intent into revenue, helping local brands dominate the Kenyan search landscape.",
-    image: "/team/david.jpg",
-    skills: ["SEO Strategy", "Content Marketing", "Analytics"],
-  },
-  {
-    id: "4",
-    name: "Grace Mwende",
-    role: "Digital Marketing Manager",
-    bio: "Grace manages ROI-focused campaigns, turning social media browsers into loyal customers.",
-    image: "/team/grace.jpg",
-    skills: ["PPC Advertising", "Campaign Management", "Copywriting"],
   },
 ];
 
@@ -72,7 +57,7 @@ const values = [
     icon: <ShieldCheck className="w-8 h-8 text-emerald-500" />,
     title: "Partnership",
     description:
-      "Your success is our reputation. We’re in it for the long haul.",
+      "Your success is our reputation. We're in it for the long haul.",
   },
   {
     icon: <Zap className="w-8 h-8 text-purple-500" />,
@@ -103,17 +88,26 @@ export default function About(): JSX.Element {
 
         <div className="container mx-auto px-6 relative z-10">
           <motion.div {...fadeInUp} className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl md:text-7xl font-black text-white mb-8 tracking-tight">
-              Scaling Kenyan Brands <br />
+            {/* Label — matches homepage orange pill badge style */}
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">
+              About SleekSites
+            </p>
+
+            {/* H1 — matches homepage hero: font-black tracking-tight */}
+            <h1 className="text-5xl md:text-7xl font-black text-white mb-8 tracking-tight leading-[0.95]">
+              Scaling Kenyan Brands{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
                 Through Digital Mastery.
               </span>
             </h1>
+
+            {/* Body — matches homepage hero subtext */}
             <p className="text-xl text-slate-400 mb-10 leading-relaxed max-w-2xl mx-auto">
               SleekSites is a boutique digital agency based in Nairobi,
               dedicated to building high-performance websites that outclass the
               competition.
             </p>
+
             <div className="flex flex-wrap justify-center gap-4">
               <Button
                 variant="primary"
@@ -131,7 +125,7 @@ export default function About(): JSX.Element {
         </div>
       </section>
 
-      {/* Stats Ribbon */}
+      {/* Stats Ribbon — matches homepage stat blocks */}
       <section className="py-12 bg-white border-y border-slate-100">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
@@ -142,10 +136,10 @@ export default function About(): JSX.Element {
               { number: "2.3x", label: "Average ROI Growth" },
             ].map((stat, i) => (
               <div key={i} className="text-center">
-                <div className="text-3xl font-bold text-slate-900 mb-1">
+                <div className="text-3xl font-bold tracking-tight text-slate-900 mb-1">
                   {stat.number}
                 </div>
-                <div className="text-slate-500 text-sm font-medium uppercase tracking-wider">
+                <div className="text-slate-500 text-sm font-bold uppercase tracking-widest">
                   {stat.label}
                 </div>
               </div>
@@ -159,29 +153,37 @@ export default function About(): JSX.Element {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <motion.div {...fadeInUp}>
-              <h2 className="text-4xl font-bold text-slate-900 mb-6">
+              {/* Section label — matches homepage "Expertise", "How we work" labels */}
+              <p className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-4">
+                Our Story
+              </p>
+
+              {/* H2 — matches homepage section headings: font-bold tracking-tight */}
+              <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-6">
                 Born from a need for{" "}
                 <span className="text-blue-600">better.</span>
               </h2>
-              <div className="space-y-6 text-slate-600 text-lg">
+
+              <div className="space-y-6 text-slate-600 text-lg leading-relaxed">
                 <p>
                   Founded in 2018, we noticed a gap: Kenyan businesses had to
                   choose between cheap, broken websites or overpriced, detached
                   agencies.
                 </p>
                 <p>
-                  We created <strong>SleekSites</strong> to provide a third
-                  option—premium, world-class engineering with a deep
-                  understanding of the local market landscape.
+                  We created{" "}
+                  <strong className="text-slate-900">SleekSites</strong> to
+                  provide a third option — premium, world-class engineering with
+                  a deep understanding of the local market landscape.
                 </p>
               </div>
 
               <div className="mt-10 p-8 bg-blue-600 rounded-3xl text-white shadow-xl shadow-blue-200">
                 <Rocket className="w-12 h-12 mb-4 text-blue-200" />
-                <h3 className="text-2xl font-bold mb-2 text-white">
+                <h3 className="text-2xl font-bold tracking-tight text-white mb-2">
                   Our Mission
                 </h3>
-                <p className="text-blue-100 italic">
+                <p className="text-blue-100 leading-relaxed">
                   "To equip every visionary Kenyan business with the technical
                   edge required to compete globally while winning locally."
                 </p>
@@ -189,14 +191,14 @@ export default function About(): JSX.Element {
             </motion.div>
 
             <div className="relative">
-              <div className="aspect-square bg-white rounded-[3rem] shadow-2xl overflow-hidden border-8 border-white">
-                {/* Replace with an actual office/team photo */}
-                <div className="w-full h-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center p-12 text-center">
-                  <p className="text-slate-400 font-medium italic">
-                    Building the future of the Kenyan web, one project at a
-                    time.
-                  </p>
-                </div>
+              <div className="aspect-square bg-white rounded-[3rem] shadow-2xl overflow-hidden border-8 border-white relative">
+                <Image
+                  src="/agency-working.jpg"
+                  alt="SleekSites team at work"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
               </div>
             </div>
           </div>
@@ -207,7 +209,11 @@ export default function About(): JSX.Element {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-20">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">
+            {/* Section label */}
+            <p className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-4">
+              What We Stand For
+            </p>
+            <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-4">
               The Values We Live By
             </h2>
             <div className="h-1 w-20 bg-blue-600 mx-auto rounded-full" />
@@ -224,7 +230,8 @@ export default function About(): JSX.Element {
                 <div className="mb-6 transform group-hover:scale-110 transition-transform">
                   {value.icon}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">
+                {/* Card title — matches homepage service card headings */}
+                <h3 className="text-xl font-bold tracking-tight text-slate-900 mb-3">
                   {value.title}
                 </h3>
                 <p className="text-slate-500 leading-relaxed">
@@ -241,8 +248,14 @@ export default function About(): JSX.Element {
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
             <div>
-              <h2 className="text-4xl font-bold mb-4">The A-Team</h2>
-              <p className="text-slate-400 text-lg">
+              {/* Section label */}
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">
+                The People
+              </p>
+              <h2 className="text-4xl font-bold tracking-tight text-white mb-4">
+                The A-Team
+              </h2>
+              <p className="text-slate-400 text-lg leading-relaxed">
                 World-class talent, homegrown in Kenya.
               </p>
             </div>
@@ -257,22 +270,31 @@ export default function About(): JSX.Element {
                 transition={{ delay: i * 0.1 }}
                 className="group relative bg-slate-800/50 rounded-3xl overflow-hidden border border-slate-700/50"
               >
-                <div className="aspect-[4/5] bg-slate-700 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500">
-                  {/* Image placeholder */}
-                  <div className="w-full h-full flex items-center justify-center text-slate-500 font-bold uppercase tracking-widest text-xs">
-                    {member.name}
-                  </div>
+                <div className="aspect-[4/5] bg-slate-700 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500 relative">
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover object-top"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  />
                 </div>
                 <div className="p-6">
-                  <p className="text-blue-400 text-xs font-bold uppercase tracking-widest mb-1">
+                  {/* Role label — matches homepage's label pattern exactly */}
+                  <p className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-1">
                     {member.role}
                   </p>
-                  <h3 className="text-xl font-bold mb-4">{member.name}</h3>
+                  <h3 className="text-xl font-bold tracking-tight text-white mb-3">
+                    {member.name}
+                  </h3>
+                  <p className="text-slate-400 text-sm leading-relaxed mb-4">
+                    {member.bio}
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {member.skills.slice(0, 2).map((skill, idx) => (
                       <span
                         key={idx}
-                        className="text-[10px] bg-slate-700 px-2 py-1 rounded text-slate-300"
+                        className="text-[10px] font-bold uppercase tracking-wider bg-slate-700 px-2 py-1 rounded text-slate-300"
                       >
                         {skill}
                       </span>
