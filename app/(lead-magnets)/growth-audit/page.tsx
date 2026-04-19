@@ -16,10 +16,10 @@ export default function AuditPage() {
           </p>
 
           <p className="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
-            She relied entirely on word-of-mouth—while international students and diplomatic clients chose competitors who were already online.
+            She relied entirely on word-of-mouth—while people were actively searching for her services online and choosing competitors who were already set up.
           </p>
 
-          {/* VIDEO CONTEXT */}
+          {/* VIDEO */}
           <div className="text-sm text-gray-500 mb-4">
             Watch what changed:
           </div>
@@ -30,16 +30,15 @@ export default function AuditPage() {
             </video>
           </div>
 
-          {/* TRANSITION */}
           <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-            She didn’t need a “pretty brochure.” She needed a system that brings in customers.
+            She didn’t need a “pretty brochure.” She needed a system that consistently brings in customers.
           </p>
 
           <a
             href="#audit-form"
             className="inline-block bg-[#c8a96e] text-black font-bold py-4 px-10 rounded hover:bg-white transition"
           >
-            Get Your Free Performance Audit
+            Get Your Free Audit (Takes 30 Seconds)
           </a>
         </section>
 
@@ -50,7 +49,7 @@ export default function AuditPage() {
           </h2>
 
           <p className="text-center text-gray-300 max-w-2xl mx-auto mb-10">
-            We built a fully-tracked growth system that captures attention, retargets visitors, and converts them into paying students—automatically.
+            We built a fully-tracked growth system that captures attention, retargets visitors, and converts them into paying customers—automatically.
           </p>
 
           <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -66,7 +65,7 @@ export default function AuditPage() {
 
             <div>
               <div className="text-2xl font-bold mb-2">Convert</div>
-              <p className="text-gray-400">Turn traffic into real student registrations</p>
+              <p className="text-gray-400">Turn traffic into real paying customers</p>
             </div>
           </div>
         </section>
@@ -78,7 +77,7 @@ export default function AuditPage() {
           </h2>
 
           <p className="text-gray-400 max-w-2xl mx-auto mb-6">
-            Divinar went from relying on referrals to getting students from across the globe.
+            Divinar went from relying on referrals to getting students from across the globe—consistently.
           </p>
 
           <p className="text-gray-400 max-w-2xl mx-auto">
@@ -93,7 +92,7 @@ export default function AuditPage() {
           </h2>
 
           <p className="text-gray-400 max-w-2xl mx-auto mb-6">
-            Right now, people are looking for businesses like yours.
+            Right now, people are actively looking for businesses like yours.
           </p>
 
           <p className="text-gray-400 max-w-2xl mx-auto mb-6">
@@ -105,14 +104,34 @@ export default function AuditPage() {
           </p>
         </section>
 
+        {/* VALUE STACK */}
+        <section className="max-w-xl mx-auto mb-12">
+          <div className="bg-[#111] p-6 rounded-lg border border-white/10">
+            <h3 className="text-xl font-bold mb-4 text-[#c8a96e] text-center">
+              What you’ll get in your audit:
+            </h3>
+
+            <ul className="text-gray-300 space-y-3 text-sm">
+              <li>• Where you&apos;re currently losing potential customers</li>
+              <li>• What’s missing from your online presence</li>
+              <li>• How competitors are capturing your demand</li>
+              <li>• A clear, step-by-step plan to fix it</li>
+            </ul>
+          </div>
+        </section>
+
         {/* CTA */}
         <section id="audit-form" className="max-w-xl mx-auto border-t border-white/10 pt-12">
           <h2 className="text-2xl font-bold mb-4 text-center">
             Ready to build your digital engine?
           </h2>
 
-          <p className="text-gray-400 text-center mb-8">
-            Book a free performance audit. We’ll show you exactly where you’re losing customers—and how to fix it.
+          <p className="text-gray-400 text-center mb-6">
+            Get a free audit. We’ll show you exactly where you’re losing customers—and how to fix it.
+          </p>
+
+          <p className="text-xs text-gray-500 text-center mb-8">
+            We only take on a limited number of audits each week.
           </p>
 
           <AuditForm />
